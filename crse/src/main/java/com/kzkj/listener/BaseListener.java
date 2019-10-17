@@ -2,9 +2,9 @@ package com.kzkj.listener;
 
 
 import com.kzkj.mq.MqSender;
-import com.kzkj.pojo.vo.customs.Custom;
-import com.kzkj.pojo.vo.customs.CustomTransInfo;
-import com.kzkj.pojo.vo.customs.ReceiverIds;
+import com.kzkj.pojo.vo.request.customs.Custom;
+import com.kzkj.pojo.vo.request.customs.CustomTransInfo;
+import com.kzkj.pojo.vo.request.customs.ReceiverIds;
 import com.kzkj.utils.CXMLUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;

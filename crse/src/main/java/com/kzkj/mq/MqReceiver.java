@@ -5,27 +5,27 @@ import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.google.common.eventbus.AsyncEventBus;
 import com.kzkj.enums.EnumBillType;
 import com.kzkj.listener.BaseListener;
-import com.kzkj.pojo.vo.InvtCancel.CEB605Message;
-import com.kzkj.pojo.vo.arrival.CEB507Message;
-import com.kzkj.pojo.vo.customs.Custom;
-import com.kzkj.pojo.vo.delivery.CEB711Message;
-import com.kzkj.pojo.vo.departure.CEB509Message;
-import com.kzkj.pojo.vo.invt.CEB603Message;
-import com.kzkj.pojo.vo.invt.CEB621Message;
-import com.kzkj.pojo.vo.invtRefund.CEB625Message;
-import com.kzkj.pojo.vo.logistics.CEB505Message;
-import com.kzkj.pojo.vo.logistics.CEB511Message;
-import com.kzkj.pojo.vo.logisticsStatus.CEB513Message;
-import com.kzkj.pojo.vo.message.CEB900Message;
-import com.kzkj.pojo.vo.message.MessageReturn;
-import com.kzkj.pojo.vo.order.CEB303Message;
-import com.kzkj.pojo.vo.order.CEB311Message;
-import com.kzkj.pojo.vo.receipts.CEB403Message;
-import com.kzkj.pojo.vo.summaryApply.CEB701Message;
-import com.kzkj.pojo.vo.summaryResult.CEB792Message;
-import com.kzkj.pojo.vo.tax.CEB816Message;
-import com.kzkj.pojo.vo.taxStatus.CEB818Message;
-import com.kzkj.pojo.vo.waybill.CEB607Message;
+import com.kzkj.pojo.vo.request.InvtCancel.CEB605Message;
+import com.kzkj.pojo.vo.request.arrival.CEB507Message;
+import com.kzkj.pojo.vo.request.customs.Custom;
+import com.kzkj.pojo.vo.request.delivery.CEB711Message;
+import com.kzkj.pojo.vo.request.departure.CEB509Message;
+import com.kzkj.pojo.vo.request.invt.CEB603Message;
+import com.kzkj.pojo.vo.request.invt.CEB621Message;
+import com.kzkj.pojo.vo.request.invtRefund.CEB625Message;
+import com.kzkj.pojo.vo.request.logistics.CEB505Message;
+import com.kzkj.pojo.vo.request.logistics.CEB511Message;
+import com.kzkj.pojo.vo.request.logisticsStatus.CEB513Message;
+import com.kzkj.pojo.vo.request.message.CEB900Message;
+import com.kzkj.pojo.vo.request.message.MessageReturn;
+import com.kzkj.pojo.vo.request.order.CEB303Message;
+import com.kzkj.pojo.vo.request.order.CEB311Message;
+import com.kzkj.pojo.vo.request.receipts.CEB403Message;
+import com.kzkj.pojo.vo.request.summaryApply.CEB701Message;
+import com.kzkj.pojo.vo.request.summaryResult.CEB792Message;
+import com.kzkj.pojo.vo.request.tax.CEB816Message;
+import com.kzkj.pojo.vo.request.taxStatus.CEB818Message;
+import com.kzkj.pojo.vo.request.waybill.CEB607Message;
 import com.kzkj.utils.XMLUtil;
 import com.rabbitmq.client.Channel;
 
@@ -36,7 +36,6 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -63,8 +62,8 @@ public class MqReceiver implements ChannelAwareMessageListener
     @Autowired
     AsyncEventBus asyncEventBus;
 
-    @Resource
-    Schema exportSchema;
+//    @Autowired
+//    Schema exportSchema;
 
     @Autowired
     BaseListener baseListener;
@@ -105,7 +104,8 @@ public class MqReceiver implements ChannelAwareMessageListener
 			log.info("解密终端报文{}",receiveXml);
             String removePart=receiveXml.substring(receiveXml.indexOf(begin),receiveXml.indexOf(end)+end.length());
             xml=receiveXml.replace(removePart, "");
-            String errorMsg = this.validateXml(xml);
+//            String errorMsg = this.validateXml(xml);
+            String errorMsg="";
             if(StringUtils.isNotEmpty(errorMsg)) {
                 sendCEB900Message(errorMsg, xml, customsXml, receiveXml);
                 return;
@@ -251,7 +251,7 @@ public class MqReceiver implements ChannelAwareMessageListener
         String queue = dxpId+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB304Message");
     }
-
+/*
     private String validateXml(String xml) {
         // 通过Schema产生针对于此Schema的验证器，利用schenaFile进行验证
         Validator validator = exportSchema.newValidator();
@@ -268,7 +268,7 @@ public class MqReceiver implements ChannelAwareMessageListener
         }
         return "";
     }
-
+*/
     /**
      * 将字符串转换为流对象
      * @param str
