@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.kzkj</groupId>
-            <artifactId>commons</artifactId>
+            <artifactId>common</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

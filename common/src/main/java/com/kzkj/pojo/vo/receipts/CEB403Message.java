@@ -1,4 +1,4 @@
-package com.kzkj.pojo.vo.order;
+package com.kzkj.pojo.vo.receipts;
 
 import com.kzkj.pojo.vo.base.BaseTransfer;
 import lombok.Data;
@@ -16,14 +16,14 @@ import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)  
 //XML文件中的根标识  
-@XmlRootElement(name="CEB303Message")  
+@XmlRootElement(name="CEB403Message")  
 //控制JAXB 绑定类中属性和字段的排序  
 @XmlType(propOrder = {   
-     "Order",   
+     "Receipts",   
      "BaseTransfer",   
 })
 @Data
-public class CEB303Message implements Serializable{
+public class CEB403Message implements Serializable{
 
 	private static final long serialVersionUID = 2549245859588443092L;
 	
@@ -34,7 +34,7 @@ public class CEB303Message implements Serializable{
     private String version = "1.0";
 	
 	@XmlElement
-	private List<Order> Order;
+	private List<Receipts> Receipts;
 	
 	private BaseTransfer BaseTransfer;
 

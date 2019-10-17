@@ -1,9 +1,8 @@
 package com.kzkj.enums;
 
-import com.baomidou.mybatisplus.enums.IEnum;
-import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum EnumInventoryStatus implements IEnum {
+
+public enum EnumInventoryStatus  {
 
     DZKAYZC("电子口岸已暂存", 1),
     DZKASBZ("电子口岸申报中", 2),
@@ -20,7 +19,6 @@ public enum EnumInventoryStatus implements IEnum {
     private String name;
     private Integer value;
 
-    @JsonValue
     public String getName() {
         return name;
     }
@@ -29,7 +27,6 @@ public enum EnumInventoryStatus implements IEnum {
         this.name = name;
     }
 
-    @Override
     public Integer getValue() {
         return value;
     }

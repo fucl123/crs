@@ -1,7 +1,7 @@
 package com.kzkj.pojo.vo.arrival;
 
 
-import com.supply.listener.request.base.BaseTransfer;
+import com.kzkj.pojo.vo.base.BaseTransfer;
 import lombok.Data;
 
 import javax.xml.bind.annotation.*;

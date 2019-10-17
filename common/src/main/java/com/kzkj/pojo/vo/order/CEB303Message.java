@@ -1,22 +1,29 @@
-package com.kzkj.pojo.vo.summaryApply;
+package com.kzkj.pojo.vo.order;
 
-import com.supply.listener.request.base.BaseTransfer;
+import com.kzkj.pojo.vo.base.BaseTransfer;
 import lombok.Data;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 
+ * 发送总署订单请求对象
+ * <br>（功能详细描述）
+ */
+
+
 @XmlAccessorType(XmlAccessType.FIELD)  
 //XML文件中的根标识  
-@XmlRootElement(name="CEB701Message")  
+@XmlRootElement(name="CEB303Message")  
 //控制JAXB 绑定类中属性和字段的排序  
 @XmlType(propOrder = {   
-     "SummaryApply",   
-     "BaseTransfer",   
+     "Order",   
+//     "BaseTransfer",
 })
 @Data
-public class CEB701Message implements Serializable{
+public class CEB303Message implements Serializable{
 
 	private static final long serialVersionUID = 2549245859588443092L;
 	
@@ -27,8 +34,8 @@ public class CEB701Message implements Serializable{
     private String version = "1.0";
 	
 	@XmlElement
-	private List<SummaryApply> SummaryApply;
+	private List<Order> Order;
 	
-	private BaseTransfer BaseTransfer;
+//	private BaseTransfer BaseTransfer;
 
 }
