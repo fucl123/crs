@@ -20,4 +20,11 @@
       <module name="demo" target="1.8" />
     </bytecodeTargetLevel>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="common" options="-parameters" />
+      <module name="crse" options="-parameters" />
+      <module name="crsi" options="-parameters" />
+    </option>
+  </component>
 </project>
