@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.DepatureDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.DepatureDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="depature_id" property="depatureId" jdbcType="INTEGER" />
+    <result column="gnum" property="gnum" jdbcType="INTEGER" />
+    <result column="total_package_no" property="totalPackageNo" jdbcType="VARCHAR" />
+    <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, depature_id, gnum, total_package_no, logistics_no, note
+  </sql>
+
+</mapper>

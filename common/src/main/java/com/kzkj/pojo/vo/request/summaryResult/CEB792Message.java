@@ -1,5 +1,6 @@
 package com.kzkj.pojo.vo.request.summaryResult;
 
+import com.kzkj.pojo.vo.request.base.BaseTransfer;
 import lombok.Data;
 
 import javax.xml.bind.annotation.*;
@@ -26,5 +27,7 @@ public class CEB792Message implements Serializable{
 	
 	@XmlElement
 	private List<com.kzkj.pojo.vo.request.summaryResult.SummaryResult> SummaryResult;
+
+	private com.kzkj.pojo.vo.request.base.BaseTransfer BaseTransfer;
 
 }

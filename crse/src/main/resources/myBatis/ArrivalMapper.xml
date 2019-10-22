@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.ArrivalMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.Arrival" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="guid" property="guid" jdbcType="VARCHAR" />
+    <result column="app_type" property="appType" jdbcType="CHAR" />
+    <result column="app_time" property="appTime" jdbcType="VARCHAR" />
+    <result column="app_status" property="appStatus" jdbcType="CHAR" />
+    <result column="customs_code" property="customsCode" jdbcType="CHAR" />
+    <result column="cop_no" property="copNo" jdbcType="VARCHAR" />
+    <result column="pre_no" property="preNo" jdbcType="VARCHAR" />
+    <result column="operator_code" property="operatorCode" jdbcType="VARCHAR" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="loct_no" property="loctNo" jdbcType="VARCHAR" />
+    <result column="ie_flag" property="ieFlag" jdbcType="CHAR" />
+    <result column="traf_mode" property="trafMode" jdbcType="CHAR" />
+    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+    <result column="domestic_traf_no" property="domesticTrafNo" jdbcType="VARCHAR" />
+    <result column="logistics_code" property="logisticsCode" jdbcType="VARCHAR" />
+    <result column="logistics_name" property="logisticsName" jdbcType="VARCHAR" />
+    <result column="msg_count" property="msgCount" jdbcType="INTEGER" />
+    <result column="msg_seq_no" property="msgSeqNo" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, guid, app_type, app_time, app_status, customs_code, cop_no, pre_no, operator_code, 
+    operator_name, loct_no, ie_flag, traf_mode, bill_no, domestic_traf_no, logistics_code, 
+    logistics_name, msg_count, msg_seq_no
+  </sql>
+
+</mapper>

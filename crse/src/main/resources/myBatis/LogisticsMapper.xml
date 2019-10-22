@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.LogisticsMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.Logistics" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="guid" property="guid" jdbcType="VARCHAR" />
+    <result column="app_type" property="appType" jdbcType="CHAR" />
+    <result column="app_time" property="appTime" jdbcType="CHAR" />
+    <result column="app_status" property="appStatus" jdbcType="CHAR" />
+    <result column="logistics_code" property="logisticsCode" jdbcType="VARCHAR" />
+    <result column="logistics_name" property="logisticsName" jdbcType="VARCHAR" />
+    <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR" />
+    <result column="freight" property="freight" jdbcType="DECIMAL" />
+    <result column="insured_free" property="insuredFree" jdbcType="DECIMAL" />
+    <result column="currency" property="currency" jdbcType="CHAR" />
+    <result column="gross_weight" property="grossWeight" jdbcType="DECIMAL" />
+    <result column="pack_no" property="packNo" jdbcType="INTEGER" />
+    <result column="goods_info" property="goodsInfo" jdbcType="VARCHAR" />
+    <result column="ebc_code" property="ebcCode" jdbcType="VARCHAR" />
+    <result column="ebc_name" property="ebcName" jdbcType="VARCHAR" />
+    <result column="ebc_telephone" property="ebcTelephone" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, guid, app_type, app_time, app_status, logistics_code, logistics_name, logistics_no, 
+    freight, insured_free, currency, gross_weight, pack_no, goods_info, ebc_code, ebc_name, 
+    ebc_telephone, note
+  </sql>
+
+</mapper>

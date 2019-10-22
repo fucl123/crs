@@ -11,13 +11,11 @@
         <module name="crsi" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="8">
       <module name="common" target="1.8" />
-      <module name="commons" target="1.8" />
       <module name="crs" target="1.8" />
       <module name="crse" target="1.8" />
       <module name="crsi" target="1.8" />
-      <module name="demo" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

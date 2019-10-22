@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.InventoryMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.Inventory" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="guid" property="guid" jdbcType="VARCHAR" />
+    <result column="app_type" property="appType" jdbcType="CHAR" />
+    <result column="app_time" property="appTime" jdbcType="CHAR" />
+    <result column="app_status" property="appStatus" jdbcType="CHAR" />
+    <result column="customs_code" property="customsCode" jdbcType="CHAR" />
+    <result column="ebp_code" property="ebpCode" jdbcType="VARCHAR" />
+    <result column="ebp_name" property="ebpName" jdbcType="VARCHAR" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="logistics_code" property="logisticsCode" jdbcType="VARCHAR" />
+    <result column="logistics_name" property="logisticsName" jdbcType="VARCHAR" />
+    <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR" />
+    <result column="cop_no" property="copNo" jdbcType="VARCHAR" />
+    <result column="pre_no" property="preNo" jdbcType="CHAR" />
+    <result column="invt_no" property="invtNo" jdbcType="CHAR" />
+    <result column="ie_flag" property="ieFlag" jdbcType="CHAR" />
+    <result column="port_code" property="portCode" jdbcType="CHAR" />
+    <result column="ie_date" property="ieDate" jdbcType="CHAR" />
+    <result column="statistics_flag" property="statisticsFlag" jdbcType="CHAR" />
+    <result column="agent_code" property="agentCode" jdbcType="VARCHAR" />
+    <result column="agent_name" property="agentName" jdbcType="VARCHAR" />
+    <result column="ebc_code" property="ebcCode" jdbcType="VARCHAR" />
+    <result column="ebc_name" property="ebcName" jdbcType="VARCHAR" />
+    <result column="owner_code" property="ownerCode" jdbcType="VARCHAR" />
+    <result column="owner_name" property="ownerName" jdbcType="VARCHAR" />
+    <result column="iac_code" property="iacCode" jdbcType="VARCHAR" />
+    <result column="iac_name" property="iacName" jdbcType="VARCHAR" />
+    <result column="ems_no" property="emsNo" jdbcType="VARCHAR" />
+    <result column="trade_mode" property="tradeMode" jdbcType="CHAR" />
+    <result column="traf_mode" property="trafMode" jdbcType="CHAR" />
+    <result column="traf_name" property="trafName" jdbcType="VARCHAR" />
+    <result column="voyage_no" property="voyageNo" jdbcType="VARCHAR" />
+    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+    <result column="total_package_no" property="totalPackageNo" jdbcType="VARCHAR" />
+    <result column="loct_no" property="loctNo" jdbcType="VARCHAR" />
+    <result column="license_no" property="licenseNo" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="CHAR" />
+    <result column="pod" property="pod" jdbcType="VARCHAR" />
+    <result column="freight" property="freight" jdbcType="DECIMAL" />
+    <result column="f_currency" property="fCurrency" jdbcType="CHAR" />
+    <result column="f_flag" property="fFlag" jdbcType="CHAR" />
+    <result column="insured_fee" property="insuredFee" jdbcType="DECIMAL" />
+    <result column="i_currency" property="iCurrency" jdbcType="CHAR" />
+    <result column="i_flag" property="iFlag" jdbcType="CHAR" />
+    <result column="wrap_type" property="wrapType" jdbcType="CHAR" />
+    <result column="pack_no" property="packNo" jdbcType="INTEGER" />
+    <result column="gross_weight" property="grossWeight" jdbcType="DECIMAL" />
+    <result column="net_weight" property="netWeight" jdbcType="DECIMAL" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, guid, app_type, app_time, app_status, customs_code, ebp_code, ebp_name, order_no, 
+    logistics_code, logistics_name, logistics_no, cop_no, pre_no, invt_no, ie_flag, port_code, 
+    ie_date, statistics_flag, agent_code, agent_name, ebc_code, ebc_name, owner_code, 
+    owner_name, iac_code, iac_name, ems_no, trade_mode, traf_mode, traf_name, voyage_no, 
+    bill_no, total_package_no, loct_no, license_no, country, pod, freight, f_currency, 
+    f_flag, insured_fee, i_currency, i_flag, wrap_type, pack_no, gross_weight, net_weight, 
+    note
+  </sql>
+
+</mapper>

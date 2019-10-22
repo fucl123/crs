@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.InventoryDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.InventoryDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="inventory_id" property="inventoryId" jdbcType="INTEGER" />
+    <result column="gnum" property="gnum" jdbcType="INTEGER" />
+    <result column="item_no" property="itemNo" jdbcType="VARCHAR" />
+    <result column="item_record_no" property="itemRecordNo" jdbcType="VARCHAR" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="gcode" property="gcode" jdbcType="VARCHAR" />
+    <result column="gname" property="gname" jdbcType="VARCHAR" />
+    <result column="gmodel" property="gmodel" jdbcType="VARCHAR" />
+    <result column="bar_code" property="barCode" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="CHAR" />
+    <result column="currency" property="currency" jdbcType="CHAR" />
+    <result column="qty" property="qty" jdbcType="DECIMAL" />
+    <result column="qty1" property="qty1" jdbcType="DECIMAL" />
+    <result column="qty2" property="qty2" jdbcType="DECIMAL" />
+    <result column="unit" property="unit" jdbcType="CHAR" />
+    <result column="unit1" property="unit1" jdbcType="CHAR" />
+    <result column="unit2" property="unit2" jdbcType="CHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, inventory_id, gnum, item_no, item_record_no, item_name, gcode, gname, gmodel, 
+    bar_code, country, currency, qty, qty1, qty2, unit, unit1, unit2, price, total_price, 
+    note
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_inventory_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_inventory_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.kzkj.pojo.po.InventoryDetail" >
+    insert into tb_inventory_detail (id, inventory_id, gnum, 
+      item_no, item_record_no, item_name, 
+      gcode, gname, gmodel, 
+      bar_code, country, currency, 
+      qty, qty1, qty2, unit, 
+      unit1, unit2, price, total_price, 
+      note)
+    values (#{id,jdbcType=INTEGER}, #{inventoryId,jdbcType=INTEGER}, #{gnum,jdbcType=INTEGER}, 
+      #{itemNo,jdbcType=VARCHAR}, #{itemRecordNo,jdbcType=VARCHAR}, #{itemName,jdbcType=VARCHAR}, 
+      #{gcode,jdbcType=VARCHAR}, #{gname,jdbcType=VARCHAR}, #{gmodel,jdbcType=VARCHAR}, 
+      #{barCode,jdbcType=VARCHAR}, #{country,jdbcType=CHAR}, #{currency,jdbcType=CHAR}, 
+      #{qty,jdbcType=DECIMAL}, #{qty1,jdbcType=DECIMAL}, #{qty2,jdbcType=DECIMAL}, #{unit,jdbcType=CHAR}, 
+      #{unit1,jdbcType=CHAR}, #{unit2,jdbcType=CHAR}, #{price,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}, 
+      #{note,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kzkj.pojo.po.InventoryDetail" >
+    insert into tb_inventory_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="inventoryId != null" >
+        inventory_id,
+      </if>
+      <if test="gnum != null" >
+        gnum,
+      </if>
+      <if test="itemNo != null" >
+        item_no,
+      </if>
+      <if test="itemRecordNo != null" >
+        item_record_no,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="gcode != null" >
+        gcode,
+      </if>
+      <if test="gname != null" >
+        gname,
+      </if>
+      <if test="gmodel != null" >
+        gmodel,
+      </if>
+      <if test="barCode != null" >
+        bar_code,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="qty != null" >
+        qty,
+      </if>
+      <if test="qty1 != null" >
+        qty1,
+      </if>
+      <if test="qty2 != null" >
+        qty2,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="unit1 != null" >
+        unit1,
+      </if>
+      <if test="unit2 != null" >
+        unit2,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="totalPrice != null" >
+        total_price,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="inventoryId != null" >
+        #{inventoryId,jdbcType=INTEGER},
+      </if>
+      <if test="gnum != null" >
+        #{gnum,jdbcType=INTEGER},
+      </if>
+      <if test="itemNo != null" >
+        #{itemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="itemRecordNo != null" >
+        #{itemRecordNo,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="gcode != null" >
+        #{gcode,jdbcType=VARCHAR},
+      </if>
+      <if test="gname != null" >
+        #{gname,jdbcType=VARCHAR},
+      </if>
+      <if test="gmodel != null" >
+        #{gmodel,jdbcType=VARCHAR},
+      </if>
+      <if test="barCode != null" >
+        #{barCode,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=CHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=CHAR},
+      </if>
+      <if test="qty != null" >
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="qty1 != null" >
+        #{qty1,jdbcType=DECIMAL},
+      </if>
+      <if test="qty2 != null" >
+        #{qty2,jdbcType=DECIMAL},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=CHAR},
+      </if>
+      <if test="unit1 != null" >
+        #{unit1,jdbcType=CHAR},
+      </if>
+      <if test="unit2 != null" >
+        #{unit2,jdbcType=CHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kzkj.pojo.po.InventoryDetail" >
+    update tb_inventory_detail
+    <set >
+      <if test="inventoryId != null" >
+        inventory_id = #{inventoryId,jdbcType=INTEGER},
+      </if>
+      <if test="gnum != null" >
+        gnum = #{gnum,jdbcType=INTEGER},
+      </if>
+      <if test="itemNo != null" >
+        item_no = #{itemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="itemRecordNo != null" >
+        item_record_no = #{itemRecordNo,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="gcode != null" >
+        gcode = #{gcode,jdbcType=VARCHAR},
+      </if>
+      <if test="gname != null" >
+        gname = #{gname,jdbcType=VARCHAR},
+      </if>
+      <if test="gmodel != null" >
+        gmodel = #{gmodel,jdbcType=VARCHAR},
+      </if>
+      <if test="barCode != null" >
+        bar_code = #{barCode,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=CHAR},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=CHAR},
+      </if>
+      <if test="qty != null" >
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="qty1 != null" >
+        qty1 = #{qty1,jdbcType=DECIMAL},
+      </if>
+      <if test="qty2 != null" >
+        qty2 = #{qty2,jdbcType=DECIMAL},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=CHAR},
+      </if>
+      <if test="unit1 != null" >
+        unit1 = #{unit1,jdbcType=CHAR},
+      </if>
+      <if test="unit2 != null" >
+        unit2 = #{unit2,jdbcType=CHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kzkj.pojo.po.InventoryDetail" >
+    update tb_inventory_detail
+    set inventory_id = #{inventoryId,jdbcType=INTEGER},
+      gnum = #{gnum,jdbcType=INTEGER},
+      item_no = #{itemNo,jdbcType=VARCHAR},
+      item_record_no = #{itemRecordNo,jdbcType=VARCHAR},
+      item_name = #{itemName,jdbcType=VARCHAR},
+      gcode = #{gcode,jdbcType=VARCHAR},
+      gname = #{gname,jdbcType=VARCHAR},
+      gmodel = #{gmodel,jdbcType=VARCHAR},
+      bar_code = #{barCode,jdbcType=VARCHAR},
+      country = #{country,jdbcType=CHAR},
+      currency = #{currency,jdbcType=CHAR},
+      qty = #{qty,jdbcType=DECIMAL},
+      qty1 = #{qty1,jdbcType=DECIMAL},
+      qty2 = #{qty2,jdbcType=DECIMAL},
+      unit = #{unit,jdbcType=CHAR},
+      unit1 = #{unit1,jdbcType=CHAR},
+      unit2 = #{unit2,jdbcType=CHAR},
+      price = #{price,jdbcType=DECIMAL},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
+      note = #{note,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

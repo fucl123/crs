@@ -6,6 +6,7 @@ import com.kzkj.pojo.vo.request.customs.Custom;
 import com.kzkj.pojo.vo.request.customs.CustomTransInfo;
 import com.kzkj.pojo.vo.request.customs.ReceiverIds;
 import com.kzkj.utils.CXMLUtil;
+import com.kzkj.utils.XMLUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

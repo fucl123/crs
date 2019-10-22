@@ -16,11 +16,11 @@ import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)  
 //XML文件中的根标识  
-@XmlRootElement(name="CEB303Message")  
+@XmlRootElement(name="CEB303Message")
 //控制JAXB 绑定类中属性和字段的排序  
 @XmlType(propOrder = {   
      "Order",   
-//     "BaseTransfer",
+     "BaseTransfer",
 })
 @Data
 public class CEB303Message implements Serializable{

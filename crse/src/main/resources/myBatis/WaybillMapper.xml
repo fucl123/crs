@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.WaybillMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.Waybill" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="guid" property="guid" jdbcType="VARCHAR" />
+    <result column="app_type" property="appType" jdbcType="CHAR" />
+    <result column="app_time" property="appTime" jdbcType="CHAR" />
+    <result column="app_status" property="appStatus" jdbcType="CHAR" />
+    <result column="customs_code" property="customsCode" jdbcType="CHAR" />
+    <result column="cop_no" property="copNo" jdbcType="VARCHAR" />
+    <result column="pre_no" property="preNo" jdbcType="CHAR" />
+    <result column="agent_code" property="agentCode" jdbcType="VARCHAR" />
+    <result column="agent_name" property="agentName" jdbcType="VARCHAR" />
+    <result column="loct_no" property="loctNo" jdbcType="VARCHAR" />
+    <result column="traf_mode" property="trafMode" jdbcType="CHAR" />
+    <result column="traf_name" property="trafName" jdbcType="VARCHAR" />
+    <result column="voyage_no" property="voyageNo" jdbcType="VARCHAR" />
+    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+    <result column="domestic_traf_no" property="domesticTrafNo" jdbcType="VARCHAR" />
+    <result column="gross_weight" property="grossWeight" jdbcType="DECIMAL" />
+    <result column="logistics_code" property="logisticsCode" jdbcType="VARCHAR" />
+    <result column="logistics_name" property="logisticsName" jdbcType="VARCHAR" />
+    <result column="msg_count" property="msgCount" jdbcType="INTEGER" />
+    <result column="msg_seq_no" property="msgSeqNo" jdbcType="INTEGER" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, guid, app_type, app_time, app_status, customs_code, cop_no, pre_no, agent_code, 
+    agent_name, loct_no, traf_mode, traf_name, voyage_no, bill_no, domestic_traf_no, 
+    gross_weight, logistics_code, logistics_name, msg_count, msg_seq_no, note
+  </sql>
+
+</mapper>

@@ -8,6 +8,8 @@ import com.kzkj.pojo.vo.request.order.Order;
 import com.kzkj.pojo.vo.response.order.CEB304Message;
 import com.kzkj.pojo.vo.response.order.OrderReturn;
 import com.kzkj.utils.XMLUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.List;
 @Component
 public class OrderEventListener extends BaseListener{
 
+    Logger logger = LoggerFactory.getLogger(OrderEventListener.class);
     @Subscribe
     public void listener(CEB303Message event){
         CEB304Message ceb304Message=new CEB304Message();
@@ -54,6 +57,7 @@ public class OrderEventListener extends BaseListener{
         ceb304Message.setOrderReturn(orderReturnList);
         ceb304Message.setGuid(orderReturnList.get(0).getGuid());
         String xml= XMLUtil.convertToXml(ceb304Message);
+        logger.info(xml);
         String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB304Message");
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB304Message");
