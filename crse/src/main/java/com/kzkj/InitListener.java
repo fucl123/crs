@@ -7,7 +7,6 @@ import com.kzkj.service.CompanyService;
 import com.rabbitmq.client.Channel;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,12 +51,15 @@ public class InitListener implements ApplicationRunner {
         {
             if(!StringUtils.isEmpty(company.getDxpId()))
             {
-                stringBuiilder.append(company.getDxpId()).append(";");
+                //stringBuiilder.append(company.getDxpId()).append(";");
+                //stringBuiilder.append(company.getDxpId()).append("_HZ;");
                 channelE.queueDeclare(company.getDxpId(), true, false, false, null);
+                channelE.queueDeclare(company.getDxpId()+"_HZ", true, false, false, null);
+                simpleMessageListenerContainer.addQueueNames(company.getDxpId());
                 log.info("dxpid:{}",company.getDxpId());
             }
         }
-        simpleMessageListenerContainer.addQueueNames(stringBuiilder.toString().split(";"));
+
 
         log.info("系统监听启动完成。开始接收企业报文！");
 

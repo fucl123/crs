@@ -11,7 +11,7 @@
         <module name="crsi" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8">
+    <bytecodeTargetLevel>
       <module name="common" target="1.8" />
       <module name="crs" target="1.8" />
       <module name="crse" target="1.8" />

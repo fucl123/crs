@@ -1,6 +1,5 @@
 package com.kzkj.listener;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.common.eventbus.Subscribe;
 import com.kzkj.pojo.vo.request.base.BaseTransfer;
 import com.kzkj.pojo.vo.request.order.CEB303Message;
@@ -59,8 +58,15 @@ public class OrderEventListener extends BaseListener{
         String xml= XMLUtil.convertToXml(ceb304Message);
         logger.info(xml);
         String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB304Message");
+        logger.info(resultXml);
         String queue=baseTransfer.getDxpId()+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB304Message");
+        logger.info("发送队列:"+queue);
+        try {
+            mqSender.sendMsg(queue, resultXml,"CEB304Message");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 }

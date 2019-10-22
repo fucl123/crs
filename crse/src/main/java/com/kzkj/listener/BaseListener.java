@@ -3,10 +3,10 @@ package com.kzkj.listener;
 
 import com.kzkj.mq.MqSender;
 import com.kzkj.pojo.vo.request.customs.Custom;
-import com.kzkj.pojo.vo.request.customs.CustomTransInfo;
-import com.kzkj.pojo.vo.request.customs.ReceiverIds;
+import com.kzkj.pojo.vo.response.customs.CustomTransInfo;
+import com.kzkj.pojo.vo.response.customs.ReceiverIds;
+import com.kzkj.pojo.vo.response.customs.CustomResponse;
 import com.kzkj.utils.CXMLUtil;
-import com.kzkj.utils.XMLUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @Component
 public class BaseListener {
-    public static final String customsDxpId = "DXPDSWEXPCEB0001";
+    public static final String customsDxpId = "DXPLGS0000000001";
     public static final String customsDxpIdIm = "DXPDSWIMPCEB0001";
 
     @Autowired
@@ -40,7 +40,7 @@ public class BaseListener {
 
 
     public String customData(String resultXml, String receiveId, String msgType) {
-        Custom custom = new Custom();
+        CustomResponse custom = new CustomResponse();
         CustomTransInfo transInfo = new CustomTransInfo();
         String data = null;
         transInfo.setCopMsgId(UUID.randomUUID().toString());//报文ID

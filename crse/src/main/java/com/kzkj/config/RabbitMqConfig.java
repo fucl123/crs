@@ -9,44 +9,28 @@ import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMqConfig
 {
-    @Value("${spring.rabbitmq.host}")
-    private String host;
-
-    @Value("${spring.rabbitmq.port}")
-    private String port;
-
-    @Value("${spring.rabbitmq.username}")
-    private String userName;
-
-    @Value("${spring.rabbitmq.password}")
-    private String password;
-
-    @Value("${spring.rabbitmq.virtualHost}")
-    private String virtualHost;
-
-    @Value("${spring.rabbitmq.prefetchCount}")
-    private int prefetchCount;
-
-    @Value("${spring.rabbitmq.concurrentConsumers}")
-    private int concurrentConsumers;
-
-    @Value("${spring.rabbitmq.maxConcurrency}")
-    private int maxConcurrency;
-
+    @Bean
+    @ConfigurationProperties(prefix = "spring.rabbitmq")
+    public RabbitConfigInfo mqConfig() {
+        return new RabbitConfigInfo();
+    }
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setAddresses(host + ":" + port);
-        connectionFactory.setUsername(userName);
-        connectionFactory.setPassword(password);
-        connectionFactory.setVirtualHost(virtualHost);
+        RabbitConfigInfo config = mqConfig();
+        connectionFactory.setAddresses(config.getAddress());
+        connectionFactory.setUsername(config.getUsername());
+        connectionFactory.setPassword(config.getPassword());
+        connectionFactory.setVirtualHost(config.getVhost());
         connectionFactory.setPublisherConfirms(true); //必须要设置
         return connectionFactory;
     }
@@ -74,10 +58,11 @@ public class RabbitMqConfig
     @Bean
     public SimpleMessageListenerContainer simpleMessageListenerContainer() {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer(connectionFactory());
+        RabbitConfigInfo config = mqConfig();
         simpleMessageListenerContainer.setExposeListenerChannel(true);
-        simpleMessageListenerContainer.setPrefetchCount(prefetchCount);
-        simpleMessageListenerContainer.setMaxConcurrentConsumers(maxConcurrency);
-        simpleMessageListenerContainer.setConcurrentConsumers(concurrentConsumers);
+        simpleMessageListenerContainer.setPrefetchCount(config.getPrefetchCount());
+        simpleMessageListenerContainer.setMaxConcurrentConsumers(config.getMaxConcurrency());
+        simpleMessageListenerContainer.setConcurrentConsumers(config.getConcurrentConsumers());
         simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.AUTO); //设置确认模式自动确认
         simpleMessageListenerContainer.setupMessageListener(mqReceiver());
         return simpleMessageListenerContainer;
