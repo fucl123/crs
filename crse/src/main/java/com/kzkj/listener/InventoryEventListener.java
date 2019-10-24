@@ -6,7 +6,10 @@ import com.kzkj.pojo.vo.request.invt.CEB603Message;
 import com.kzkj.pojo.vo.request.invt.Inventory;
 import com.kzkj.pojo.vo.response.invt.CEB604Message;
 import com.kzkj.pojo.vo.response.invt.InventoryReturn;
+import com.kzkj.service.InventoryService;
+import com.kzkj.utils.RandomUtil;
 import com.kzkj.utils.XMLUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +17,10 @@ import java.util.List;
 
 @Component
 public class InventoryEventListener extends BaseListener{
+
+    @Autowired
+    InventoryService inventoryService;
+
     @Subscribe
     public void listener(CEB603Message event){
         CEB604Message ceb604Message=new CEB604Message();
@@ -28,7 +35,8 @@ public class InventoryEventListener extends BaseListener{
             inventoryReturn.setAgentCode(inventory.getInventoryHead().getAgentCode());
             inventoryReturn.setPreNo("");
             inventoryReturn.setEbcCode(inventory.getInventoryHead().getEbcCode());
-            inventoryReturn.setInvtNo("");
+            inventoryReturn.setInvtNo(sdf.format(new Date())+ RandomUtil.genRomdom());
+            inventory.getInventoryHead().setInvtNo(inventoryReturn.getInvtNo());
             inventoryReturn.setOrderNo(inventory.getInventoryHead().getOrderNo());
             inventoryReturn.setEbpCode(inventory.getInventoryHead().getEbpCode());
             inventoryReturn.setEbpCode(inventory.getInventoryHead().getEbcCode());
@@ -59,5 +67,8 @@ public class InventoryEventListener extends BaseListener{
         String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB604Message");
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB604Message");
+
+        //插入数据库
+        inventoryService.insertInventorys(event.getInventory());
     }
 }

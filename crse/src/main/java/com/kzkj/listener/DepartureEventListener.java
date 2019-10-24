@@ -6,7 +6,9 @@ import com.kzkj.pojo.vo.request.departure.CEB509Message;
 import com.kzkj.pojo.vo.request.departure.Departure;
 import com.kzkj.pojo.vo.response.departure.CEB510Message;
 import com.kzkj.pojo.vo.response.departure.DepartureReturn;
+import com.kzkj.service.DepartureService;
 import com.kzkj.utils.XMLUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +16,9 @@ import java.util.List;
 
 @Component
 public class DepartureEventListener extends BaseListener{
+
+    @Autowired
+    DepartureService departureService;
 
     @Subscribe
     public void listener(CEB509Message event){
@@ -54,5 +59,7 @@ public class DepartureEventListener extends BaseListener{
         String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB712Message");
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB712Message");
+        //插入数据库
+        departureService.insertDepartures(event.getDeparture());
     }
 }

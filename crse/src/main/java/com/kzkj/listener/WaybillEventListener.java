@@ -6,7 +6,9 @@ import com.kzkj.pojo.vo.request.waybill.CEB607Message;
 import com.kzkj.pojo.vo.request.waybill.WayBill;
 import com.kzkj.pojo.vo.response.waybill.CEB608Message;
 import com.kzkj.pojo.vo.response.waybill.WayBillReturn;
+import com.kzkj.service.WaybillService;
 import com.kzkj.utils.XMLUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +16,10 @@ import java.util.List;
 
 @Component
 public class WaybillEventListener extends BaseListener{
+
+    @Autowired
+    WaybillService waybillService;
+
     @Subscribe
     public void listener(CEB607Message event){
         CEB608Message ceb608Message=new CEB608Message();
@@ -56,5 +62,7 @@ public class WaybillEventListener extends BaseListener{
         String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB608Message");
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB608Message");
+        //插入数据库
+        waybillService.imsertWaybill(event.getWayBill());
     }
 }

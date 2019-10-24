@@ -1,11 +1,14 @@
 package com.kzkj.listener;
 
 import com.google.common.eventbus.Subscribe;
+import com.kzkj.mapper.ArrivalMapper;
 import com.kzkj.pojo.vo.request.arrival.Arrival;
 import com.kzkj.pojo.vo.request.arrival.CEB507Message;
 import com.kzkj.pojo.vo.response.arrival.ArrivalReturn;
 import com.kzkj.pojo.vo.response.arrival.CEB508Message;
+import com.kzkj.service.ArrivalService;
 import com.kzkj.utils.XMLUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.kzkj.pojo.vo.request.base.BaseTransfer;
 import java.util.ArrayList;
@@ -14,6 +17,9 @@ import java.util.List;
 
 @Component
 public class ArrivalEventListener extends BaseListener{
+
+    @Autowired
+    ArrivalService arrivalService;
 
     @Subscribe
     public void listener(CEB507Message event){
@@ -54,5 +60,8 @@ public class ArrivalEventListener extends BaseListener{
         String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB508Message");
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB508Message");
+
+        //插入数据库
+        arrivalService.insertArrival(event.getArrival());
     }
 }

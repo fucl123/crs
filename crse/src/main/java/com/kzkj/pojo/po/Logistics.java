@@ -29,7 +29,7 @@ public class Logistics extends Model<Logistics> {
 
     private BigDecimal freight;
 
-    private BigDecimal insuredFree;
+    private BigDecimal insuredFee;
 
     private String currency;
 

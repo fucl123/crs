@@ -6,7 +6,9 @@ import com.kzkj.pojo.vo.request.logistics.CEB505Message;
 import com.kzkj.pojo.vo.request.logistics.Logistics;
 import com.kzkj.pojo.vo.response.logistics.CEB506Message;
 import com.kzkj.pojo.vo.response.logistics.LogisticsReturn;
+import com.kzkj.service.LogisticsService;
 import com.kzkj.utils.XMLUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,6 +17,10 @@ import java.util.List;
 
 @Component
 public class LogisticsEventListener extends BaseListener{
+
+    @Autowired
+    LogisticsService logisticsService;
+
     @Subscribe
     public void listener(CEB505Message event){
         CEB506Message ceb506Message=new CEB506Message();
@@ -53,5 +59,7 @@ public class LogisticsEventListener extends BaseListener{
         String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB506Message");
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB506Message");
+        //插入数据库
+        logisticsService.insertLogistics(event.getLogistics());
     }
 }

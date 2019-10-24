@@ -1,12 +1,15 @@
 package com.kzkj.pojo.po;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
+
 @Getter
 @Setter
 @TableName("tb_order")
@@ -40,6 +43,9 @@ public class Order extends Model<Order> {
     private String currency;
 
     private String note;
+
+    @TableField(exist= false)
+    private List<OrderDetail> orderDetailList;
 
     @Override
     protected Serializable pkVal() {

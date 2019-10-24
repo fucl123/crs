@@ -66,11 +66,146 @@ public class MqReceiver implements ChannelAwareMessageListener
 
     @Autowired
     public MqSender mqSender;
+
+    @Override
+    public void onMessage(Message message, Channel channel) {
+
+        String customsXml = new String(message.getBody());
+        //log.info("终端报文{}",customsXml);
+       // log.info("接收报文类型出口");
+        String xml;
+        try
+        {
+
+            String receiveXml = customsXml;
+            log.info("解密终端报文{}",receiveXml);
+            String removePart=receiveXml.substring(receiveXml.indexOf(begin),receiveXml.indexOf(end)+end.length());
+            xml=receiveXml.replace(removePart, "");
+//            String errorMsg = this.validateXml(xml);
+            String errorMsg="";
+            if(StringUtils.isNotEmpty(errorMsg)) {
+                sendCEB900Message(errorMsg, xml, customsXml, receiveXml);
+                return;
+            }
+            xml=xml.replace("ceb:", "");
+
+            log.info("解密终端报文{}",xml);
+        }
+        catch (Exception e)
+        {
+            log.error("终端报文解析失败{}",e.getMessage());
+            return;
+        }
+
+
+        Object result = null;
+
+        if(xml.indexOf(EnumBillType.Arrival.getName()) > 0)
+        {
+            log.info("处理{CEB507Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB507Message.class,xml);
+        }
+        else if(xml.indexOf(EnumBillType.Departure.getName()) > 0)
+        {
+            log.info("处理{CEB509Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB509Message.class,xml);
+        }
+        else if(xml.indexOf(EnumBillType.Inventory.getName()) > 0)
+        {
+            log.info("处理{CEB603Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB603Message.class,xml);
+        }
+        else if(xml.indexOf(EnumBillType.InvtCancel.getName()) > 0)
+        {
+            log.info("处理{CEB605Message}报文");
+            result = XMLUtil.convertXmlStrToObject(CEB605Message.class,xml);
+        }
+        else if(xml.indexOf(EnumBillType.Logistics.getName()) > 0)
+        {
+            log.info("处理{CEB505Message}报文");
+            result = XMLUtil.convertXmlStrToObject(CEB505Message.class,xml);
+        }
+        else if(xml.indexOf(EnumBillType.Order.getName()) > 0)
+        {
+            log.info("处理{CEB303Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB303Message.class,xml);
+        }
+        else if(xml.indexOf(EnumBillType.SummaryApply.getName()) > 0)
+        {
+            log.info("处理{CEB701Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB701Message.class,xml);
+        }
+        else if(xml.indexOf(EnumBillType.SummaryResult.getName()) > 0)
+        {
+            log.info("处理{CEB792Message}报文");
+            result = XMLUtil.convertXmlStrToObject(CEB792Message.class,xml);
+        }
+        else if(xml.indexOf(EnumBillType.WayBill.getName()) > 0)
+        {
+            log.info("处理{CEB607Message}报文");
+            result = XMLUtil.convertXmlStrToObject(CEB607Message.class,xml);
+        }
+        else if(xml.indexOf(EnumBillType.Receipts.getName()) > 0)
+        {
+            log.info("处理{CEB403Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB403Message.class,xml);
+        }
+        else if(xml.indexOf(EnumBillType.ImportOrder.getName()) > 0)
+        {
+            log.info("处理{CEB311Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB311Message.class, xml);
+        }
+        else if(xml.indexOf(EnumBillType.ImportLogistics.getName()) > 0)
+        {
+            log.info("处理{CEB511Message}报文");
+            result = XMLUtil.convertXmlStrToObject(CEB511Message.class, xml);
+        }
+        else if(xml.indexOf(EnumBillType.ImportLogisticsStatus.getName()) > 0)
+        {
+            log.info("处理{CEB513Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB513Message.class, xml);
+        }
+        else if(xml.indexOf(EnumBillType.ImportInventory.getName()) > 0)
+        {
+            log.info("处理{CEB621Message}报文");
+            result = XMLUtil.convertXmlStrToObject(CEB621Message.class, xml);
+        }
+        else if(xml.indexOf(EnumBillType.InvtRefund.getName()) > 0)
+        {
+            log.info("处理{CEB625Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB625Message.class, xml);
+        }
+        else if(xml.indexOf(EnumBillType.Delivery.getName()) > 0)
+        {
+            log.info("处理{CEB711Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB711Message.class, xml);
+        }
+        else if(xml.indexOf(EnumBillType.Tax.getName()) > 0)
+        {
+            log.info("处理{CEB816Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB816Message.class, xml);
+        }
+        else if(xml.indexOf(EnumBillType.TaxStatus.getName()) > 0)
+        {
+            log.info("处理{CEB818Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB818Message.class, xml);
+        }
+        else
+        {
+            log.error("报文信息有误");
+        }
+
+        if(result != null)
+        {
+            asyncEventBus.post(result);
+        }
+    }
+
     /**
      * 根据收到的报文类型，生成不同的事件
      *
      */
-    @Override
+    /*@Override
     public void onMessage(Message message, Channel channel) {
 
         String customsXml = new String(message.getBody());
@@ -218,7 +353,7 @@ public class MqReceiver implements ChannelAwareMessageListener
         {
             asyncEventBus.post(result);
         }
-    }
+    }*/
 
     private void sendCEB900Message(String errorMsg, String xml, String customsXml, String receiveXml) {
         String guid = xml.substring(xml.indexOf("<ceb:guid>"), xml.indexOf("</ceb:guid>")).substring("<ceb:guid>".length());
