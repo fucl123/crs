@@ -32,4 +32,9 @@ public class LogisticsServiceImpl extends ServiceImpl<LogisticsMapper, Logistics
         }
         return true;
     }
+
+    @Override
+    public List<Logistics> getByLogisticsNo(String logisticsNo) {
+        return logisticsMapper.getByLogisticsNo(logisticsNo);
+    }
 }

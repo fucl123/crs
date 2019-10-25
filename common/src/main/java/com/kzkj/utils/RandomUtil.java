@@ -100,9 +100,8 @@ public class RandomUtil {
         return String.format("%04d", random.nextInt(9999 )+ 1);
     }
     public static void main(String[] args) {
-        for (int i = 0; i < 4999; i++) {
-            System.out.println(genRomdom());
-        }
+        boolean i = (6 != 6);
+        System.out.println(i);
 
     }
 }

@@ -27,4 +27,7 @@
     ebc_telephone, note
   </sql>
 
+  <select id="getByLogisticsNo" resultMap="BaseResultMap">
+    SELECT * FROM tb_logistics WHERE logistics_no = #{logisticsNo}
+  </select>
 </mapper>

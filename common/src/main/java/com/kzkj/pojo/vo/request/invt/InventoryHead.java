@@ -61,6 +61,7 @@ import java.io.Serializable;
 	    "netWeight",
 		"note",
 		"invtNo",
+        "preNo",
 })
 @Data
 public class InventoryHead implements Serializable{
@@ -114,6 +115,7 @@ public class InventoryHead implements Serializable{
 	private String note;
     //非xml字段
 	private String invtNo;
+	private String preNo;
 	public void setFreight(String freight) {
 		this.freight= (double)Integer.valueOf(freight)/1000+"";
 	}

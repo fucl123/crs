@@ -8,4 +8,6 @@ import java.util.List;
 public interface LogisticsService extends IService<Logistics> {
 
     boolean insertLogistics(List<com.kzkj.pojo.vo.request.logistics.Logistics> logisticsList);
+
+    List<Logistics> getByLogisticsNo(String logisticsNo);
 }
