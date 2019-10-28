@@ -8,7 +8,10 @@ import com.kzkj.pojo.vo.request.arrival.Arrival;
 import com.kzkj.pojo.vo.request.arrival.CEB507Message;
 import com.kzkj.pojo.vo.response.arrival.ArrivalReturn;
 import com.kzkj.pojo.vo.response.arrival.CEB508Message;
+import com.kzkj.pojo.vo.response.waybill.CEB608Message;
+import com.kzkj.pojo.vo.response.waybill.WayBillReturn;
 import com.kzkj.service.ArrivalService;
+import com.kzkj.service.WaybillService;
 import com.kzkj.utils.BeanMapper;
 import com.kzkj.utils.XMLUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,9 @@ public class ArrivalEventListener extends BaseListener{
 
     @Autowired
     ArrivalService arrivalService;
+
+    @Autowired
+    WaybillService waybillService;
 
     @Subscribe
     public void listener(CEB507Message event){
@@ -77,10 +83,8 @@ public class ArrivalEventListener extends BaseListener{
         if (msgCount == msgSeqNo) {
             //运抵单399回执报文
             returnArrval399(arrivalHead.getBillNo(),baseTransfer.getDxpId());
-            //运抵单500回执报文
-            //returnArrval500(arrivalHead.getBillNo(),baseTransfer.getDxpId());
-            //运抵单800回执报文
-            returnArrval800(arrivalHead.getBillNo(),baseTransfer.getDxpId());
+            //清单800回执报文
+            returnInvt800(arrivalHead.getBillNo(),baseTransfer.getDxpId());
         }
 
     }
@@ -116,62 +120,62 @@ public class ArrivalEventListener extends BaseListener{
     }
 
     /**
-     * 运抵单800回执报文
+     * 清单800回执报文
      * @param billNo
      * @param dxpId
      */
-    private void returnArrval800(String billNo, String dxpId){
-        CEB508Message ceb508Message = new CEB508Message();
-        List<ArrivalReturn> arrivalReturnList = new ArrayList<>();
-        EntityWrapper<com.kzkj.pojo.po.Arrival> entityWrapper = new EntityWrapper<>();
+    private void returnInvt800(String billNo, String dxpId){
+        CEB608Message ceb608Message=new CEB608Message();
+        List<WayBillReturn> wayBillReturnList = new ArrayList<>();
+        EntityWrapper<com.kzkj.pojo.po.Waybill> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("bill_no", billNo);
-        List<com.kzkj.pojo.po.Arrival> arrivalList = arrivalService.selectList(entityWrapper);
-        if(arrivalList == null || arrivalList.size() <= 0) return;
-        for(com.kzkj.pojo.po.Arrival a : arrivalList)
+        List<com.kzkj.pojo.po.Waybill> waybillList = waybillService.selectList(entityWrapper);
+        if(waybillList == null || waybillList.size() <= 0) return;
+        for(com.kzkj.pojo.po.Waybill a : waybillList)
         {
-            ArrivalReturn arrivalReturn =new ArrivalReturn();
-            BeanMapper.map(a,arrivalReturn);
+            WayBillReturn wayBillReturn =new WayBillReturn();
+            BeanMapper.map(a,wayBillReturn);
             String now = sdf.format(new Date());
-            arrivalReturn.setReturnTime(now);
-            arrivalReturn.setReturnInfo("放行["+a.getGuid()+"]");
-            arrivalReturn.setReturnStatus("800");
-            arrivalReturnList.add(arrivalReturn);
+            wayBillReturn.setReturnTime(now);
+            wayBillReturn.setReturnInfo("放行["+a.getGuid()+"]");
+            wayBillReturn.setReturnStatus("800");
+            wayBillReturnList.add(wayBillReturn);
         }
-        ceb508Message.setArrivalReturn(arrivalReturnList);
-        ceb508Message.setGuid(arrivalReturnList.get(0).getGuid());
-        String xml= XMLUtil.convertToXml(ceb508Message);
-        String resultXml=customData(xml, dxpId, "CEB508Message");
+        ceb608Message.setWayBillReturn(wayBillReturnList);
+        ceb608Message.setGuid(wayBillReturnList.get(0).getGuid());
+        String xml= XMLUtil.convertToXml(ceb608Message);
+        String resultXml=customData(xml, dxpId, "ceb608Message");
         String queue=dxpId+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB508Message");
+        mqSender.sendMsg(queue, resultXml,"ceb608Message");
     }
 
     /**
-     * 运抵单500回执报文
+     * 清单500回执报文
      * @param billNo
      * @param dxpId
      */
-    private void returnArrval500(String billNo, String dxpId){
-        CEB508Message ceb508Message = new CEB508Message();
-        List<ArrivalReturn> arrivalReturnList = new ArrayList<>();
-        EntityWrapper<com.kzkj.pojo.po.Arrival> entityWrapper = new EntityWrapper<>();
+    private void returnInvt500(String billNo, String dxpId){
+        CEB608Message ceb608Message=new CEB608Message();
+        List<WayBillReturn> wayBillReturnList = new ArrayList<>();
+        EntityWrapper<com.kzkj.pojo.po.Waybill> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("bill_no", billNo);
-        List<com.kzkj.pojo.po.Arrival> arrivalList = arrivalService.selectList(entityWrapper);
-        if(arrivalList == null || arrivalList.size() <= 0) return;
-        for(com.kzkj.pojo.po.Arrival a : arrivalList)
+        List<com.kzkj.pojo.po.Waybill> waybillList = waybillService.selectList(entityWrapper);
+        if(waybillList == null || waybillList.size() <= 0) return;
+        for(com.kzkj.pojo.po.Waybill a : waybillList)
         {
-            ArrivalReturn arrivalReturn =new ArrivalReturn();
-            BeanMapper.map(a,arrivalReturn);
+            WayBillReturn wayBillReturn =new WayBillReturn();
+            BeanMapper.map(a,wayBillReturn);
             String now = sdf.format(new Date());
-            arrivalReturn.setReturnTime(now);
-            arrivalReturn.setReturnInfo("查验["+a.getGuid()+"]");
-            arrivalReturn.setReturnStatus("500");
-            arrivalReturnList.add(arrivalReturn);
+            wayBillReturn.setReturnTime(now);
+            wayBillReturn.setReturnInfo("查验["+a.getGuid()+"]");
+            wayBillReturn.setReturnStatus("500");
+            wayBillReturnList.add(wayBillReturn);
         }
-        ceb508Message.setArrivalReturn(arrivalReturnList);
-        ceb508Message.setGuid(arrivalReturnList.get(0).getGuid());
-        String xml= XMLUtil.convertToXml(ceb508Message);
-        String resultXml=customData(xml, dxpId, "CEB508Message");
+        ceb608Message.setWayBillReturn(wayBillReturnList);
+        ceb608Message.setGuid(wayBillReturnList.get(0).getGuid());
+        String xml= XMLUtil.convertToXml(ceb608Message);
+        String resultXml=customData(xml, dxpId, "ceb608Message");
         String queue=dxpId+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB508Message");
+        mqSender.sendMsg(queue, resultXml,"ceb608Message");
     }
 }

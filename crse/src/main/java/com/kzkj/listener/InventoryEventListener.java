@@ -97,10 +97,6 @@ public class InventoryEventListener extends BaseListener{
         returnLogistics120(logisticsNoList,baseTransfer.getDxpId());
         //回执清单120
         returnInvt120(event);
-        //回执订单399
-        //returnOrder399(orderNoList,baseTransfer.getDxpId());
-        //回执运单399
-        //returnLogistics399(logisticsNoList,baseTransfer.getDxpId());
         //回执清单399
         returnInvt399(event);
     }

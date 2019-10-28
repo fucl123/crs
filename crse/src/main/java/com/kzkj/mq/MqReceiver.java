@@ -27,6 +27,7 @@ import com.kzkj.pojo.vo.request.tax.CEB816Message;
 import com.kzkj.pojo.vo.request.taxStatus.CEB818Message;
 import com.kzkj.pojo.vo.request.waybill.CEB607Message;
 import com.kzkj.utils.XMLUtil;
+import com.kzkj.utils.XmlValidate;
 import com.rabbitmq.client.Channel;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,11 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.Validator;
+import javax.xml.validation.ValidatorHandler;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -67,7 +73,10 @@ public class MqReceiver implements ChannelAwareMessageListener
     @Autowired
     public MqSender mqSender;
 
-    @Override
+    @Autowired
+    XmlValidate crseXmlValidate;
+
+    /*@Override
     public void onMessage(Message message, Channel channel) {
 
         String customsXml = new String(message.getBody());
@@ -199,13 +208,13 @@ public class MqReceiver implements ChannelAwareMessageListener
         {
             asyncEventBus.post(result);
         }
-    }
+    }*/
 
     /**
      * 根据收到的报文类型，生成不同的事件
      *
      */
-    /*@Override
+    @Override
     public void onMessage(Message message, Channel channel) {
 
         String customsXml = new String(message.getBody());
@@ -235,8 +244,9 @@ public class MqReceiver implements ChannelAwareMessageListener
 			log.info("解密终端报文{}",receiveXml);
             String removePart=receiveXml.substring(receiveXml.indexOf(begin),receiveXml.indexOf(end)+end.length());
             xml=receiveXml.replace(removePart, "");
-//            String errorMsg = this.validateXml(xml);
-            String errorMsg="";
+            log.info("解密终端去出加签报文{}",xml);
+            //校验报文格式
+            String errorMsg = crseXmlValidate.xmlStringValidate(xml);
             if(StringUtils.isNotEmpty(errorMsg)) {
                 sendCEB900Message(errorMsg, xml, customsXml, receiveXml);
                 return;
@@ -353,7 +363,7 @@ public class MqReceiver implements ChannelAwareMessageListener
         {
             asyncEventBus.post(result);
         }
-    }*/
+    }
 
     private void sendCEB900Message(String errorMsg, String xml, String customsXml, String receiveXml) {
         String guid = xml.substring(xml.indexOf("<ceb:guid>"), xml.indexOf("</ceb:guid>")).substring("<ceb:guid>".length());
@@ -382,9 +392,19 @@ public class MqReceiver implements ChannelAwareMessageListener
         String queue = dxpId+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB304Message");
     }
-/*
     private String validateXml(String xml) {
         // 通过Schema产生针对于此Schema的验证器，利用schenaFile进行验证
+        Schema exportSchema = new Schema() {
+            @Override
+            public Validator newValidator() {
+                return this.newValidator();
+            }
+
+            @Override
+            public ValidatorHandler newValidatorHandler() {
+                return this.newValidatorHandler();
+            }
+        };
         Validator validator = exportSchema.newValidator();
         // 得到验证的数据源
         Source source = new StreamSource(String2InputStream(xml));
@@ -399,7 +419,6 @@ public class MqReceiver implements ChannelAwareMessageListener
         }
         return "";
     }
-*/
     /**
      * 将字符串转换为流对象
      * @param str
