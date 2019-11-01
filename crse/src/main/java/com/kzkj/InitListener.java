@@ -28,8 +28,6 @@ public class InitListener implements ApplicationRunner {
     @Autowired
     ArrivalEventListener arrivalEventListener;
     @Autowired
-    DeliveryEventListener deliveryEventListener;
-    @Autowired
     DepartureEventListener departureEventListener;
     @Autowired
     InventoryEventListener inventoryEventListener;
@@ -59,7 +57,6 @@ public class InitListener implements ApplicationRunner {
 
         asyncEventBus.register(orderEventListener);
         asyncEventBus.register(arrivalEventListener);
-        asyncEventBus.register(deliveryEventListener);
         asyncEventBus.register(departureEventListener);
         asyncEventBus.register(inventoryEventListener);
         asyncEventBus.register(invtCancelEventListener);
@@ -86,6 +83,13 @@ public class InitListener implements ApplicationRunner {
                 simpleMessageListenerContainer.addQueueNames(company.getDxpId());
                 log.info("dxpid:{}",company.getDxpId());
             }
+        }
+
+        try{
+            //simpleMessageListenerContainer.addQueueNames("3702100002");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
 
 

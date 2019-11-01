@@ -48,6 +48,7 @@ public class DepartureEventListener extends BaseListener{
             departureReturn.setCopNo(departure.getDepartureHead().getCopNo());
             departureReturn.setPreNo("123456789");
             departureReturn.setLogisticsCode(departure.getDepartureHead().getLogisticsCode());
+            departureReturn.setMsgSeqNo(departure.getDepartureHead().getMsgSeqNo());
             String now = sdf.format(new Date());
             departureReturn.setReturnTime(now);
             //数据查重
@@ -72,14 +73,14 @@ public class DepartureEventListener extends BaseListener{
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB712Message");
         //插入数据库
-        departureService.insertDepartures(event.getDeparture());
+        //departureService.insertDepartures(event.getDeparture());
         //判断是否是拆分的最后一个报文
         if(msgCount == msgSeqNo)
         {
             //离境单399回执报文
-            returnDeparture399(departureHead.getBillNo(),baseTransfer.getDxpId());
+            //returnDeparture399(departureHead.getBillNo(),baseTransfer.getDxpId());
             //清单899回执报文
-            returnInvt899(departureHead.getBillNo(),baseTransfer.getDxpId());
+            //returnInvt899(departureHead.getBillNo(),baseTransfer.getDxpId());
         }
     }
 

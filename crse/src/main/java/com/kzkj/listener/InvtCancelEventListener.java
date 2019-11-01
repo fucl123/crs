@@ -26,9 +26,9 @@ public class InvtCancelEventListener extends BaseListener{
             invtCancelReturn.setGuid(invtCancel.getGuid());
             invtCancelReturn.setCopNo(invtCancel.getCopNo());
             invtCancelReturn.setAgentCode(invtCancel.getAgentCode());
-            invtCancelReturn.setPreNo(invtCancel.getPreNo());
+            invtCancelReturn.setPreNo("123456");
             invtCancelReturn.setInvtNo(invtCancel.getInvtNo());
-
+            invtCancelReturn.setMsgSeqNo("1");
             String now = sdf.format(new Date());
             invtCancelReturn.setReturnTime(now);
 

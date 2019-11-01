@@ -50,6 +50,7 @@ public class ArrivalEventListener extends BaseListener{
             arrivalReturn.setBillNo(arrival.getArrivalHead().getBillNo());
             arrivalReturn.setLogisticsCode(arrival.getArrivalHead().getLogisticsCode());
             arrivalReturn.setOperatorCode(arrival.getArrivalHead().getOperatorCode());
+            arrivalReturn.setMsgSeqNo(arrival.getArrivalHead().getMsgSeqNo());
             String now = sdf.format(new Date());
             arrivalReturn.setReturnTime(now);
 
@@ -77,14 +78,14 @@ public class ArrivalEventListener extends BaseListener{
         mqSender.sendMsg(queue, resultXml,"CEB508Message");
 
         //插入数据库
-        arrivalService.insertArrival(event.getArrival());
+        //arrivalService.insertArrival(event.getArrival());
 
         //判断是否是拆分的最后一个报文
         if (msgCount == msgSeqNo) {
             //运抵单399回执报文
-            returnArrval399(arrivalHead.getBillNo(),baseTransfer.getDxpId());
+            //returnArrval399(arrivalHead.getBillNo(),baseTransfer.getDxpId());
             //清单800回执报文
-            returnInvt800(arrivalHead.getBillNo(),baseTransfer.getDxpId());
+            //returnInvt800(arrivalHead.getBillNo(),baseTransfer.getDxpId());
         }
 
     }

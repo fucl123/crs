@@ -24,6 +24,8 @@ import java.io.Serializable;
 	      "price",
 	      "totalPrice",
 	      "note",
+		  "gmodel",
+		"country",
 })
 @Data
 public class OrderList implements Serializable{
@@ -51,5 +53,10 @@ public class OrderList implements Serializable{
 	private String totalPrice;
 	
 	private String note;
+
+	//进口字段
+	private String gmodel;
+
+	private String country;
     
 }

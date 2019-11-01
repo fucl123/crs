@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.ImportInventoryDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.ImportInventoryDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="inventory_id" property="inventoryId" jdbcType="INTEGER" />
+    <result column="gnum" property="gnum" jdbcType="INTEGER" />
+    <result column="item_record_no" property="itemRecordNo" jdbcType="VARCHAR" />
+    <result column="item_no" property="itemNo" jdbcType="VARCHAR" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="gcode" property="gcode" jdbcType="VARCHAR" />
+    <result column="gname" property="gname" jdbcType="VARCHAR" />
+    <result column="gmodel" property="gmodel" jdbcType="VARCHAR" />
+    <result column="bar_code" property="barCode" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="CHAR" />
+    <result column="trade_country" property="tradeCountry" jdbcType="CHAR" />
+    <result column="currency" property="currency" jdbcType="CHAR" />
+    <result column="qty" property="qty" jdbcType="DECIMAL" />
+    <result column="qty1" property="qty1" jdbcType="DECIMAL" />
+    <result column="qty2" property="qty2" jdbcType="DECIMAL" />
+    <result column="unit" property="unit" jdbcType="CHAR" />
+    <result column="unit1" property="unit1" jdbcType="CHAR" />
+    <result column="unit2" property="unit2" jdbcType="CHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, inventory_id, gnum, item_record_no, item_no, item_name, gcode, gname, gmodel, 
+    bar_code, country, trade_country, currency, qty, qty1, qty2, unit, unit1, unit2, 
+    price, total_price, note
+  </sql>
+</mapper>

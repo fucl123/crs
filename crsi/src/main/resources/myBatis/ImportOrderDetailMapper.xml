@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.ImportOrderDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.ImportOrderDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="import_order_id" property="importOrderId" jdbcType="INTEGER" />
+    <result column="gnum" property="gnum" jdbcType="INTEGER" />
+    <result column="item_no" property="itemNo" jdbcType="VARCHAR" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="gmodel" property="gmodel" jdbcType="VARCHAR" />
+    <result column="item_describe" property="itemDescribe" jdbcType="VARCHAR" />
+    <result column="bar_code" property="barCode" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="qty" property="qty" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="total_price" property="totalPrice" jdbcType="DOUBLE" />
+    <result column="country" property="country" jdbcType="CHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, import_order_id, gnum, item_no, item_name, gmodel, item_describe, bar_code, unit, 
+    currency, qty, price, total_price, country, note
+  </sql>
+</mapper>

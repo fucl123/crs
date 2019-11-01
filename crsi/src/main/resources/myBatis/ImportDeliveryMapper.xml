@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.ImportDeliveryMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.ImportDelivery" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="guid" property="guid" jdbcType="VARCHAR" />
+    <result column="app_type" property="appType" jdbcType="CHAR" />
+    <result column="app_time" property="appTime" jdbcType="VARCHAR" />
+    <result column="app_status" property="appStatus" jdbcType="CHAR" />
+    <result column="customs_code" property="customsCode" jdbcType="CHAR" />
+    <result column="cop_no" property="copNo" jdbcType="VARCHAR" />
+    <result column="rkd_no" property="rkdNo" jdbcType="CHAR" />
+    <result column="pre_no" property="preNo" jdbcType="VARCHAR" />
+    <result column="operator_code" property="operatorCode" jdbcType="VARCHAR" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="ie_flag" property="ieFlag" jdbcType="CHAR" />
+    <result column="traf_mode" property="trafMode" jdbcType="CHAR" />
+    <result column="traf_no" property="trafNo" jdbcType="VARCHAR" />
+    <result column="voyage_no" property="voyageNo" jdbcType="VARCHAR" />
+    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+    <result column="logistics_code" property="logisticsCode" jdbcType="VARCHAR" />
+    <result column="logistics_name" property="logisticsName" jdbcType="VARCHAR" />
+    <result column="unload_location" property="unloadLocation" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="return_state" property="returnState" jdbcType="VARCHAR" />
+    <result column="return_time" property="returnTime" jdbcType="CHAR" />
+    <result column="return_info" property="returnInfo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, guid, app_type, app_time, app_status, customs_code, cop_no, rkd_no, pre_no, operator_code, 
+    operator_name, ie_flag, traf_mode, traf_no, voyage_no, bill_no, logistics_code, logistics_name, 
+    unload_location, note, return_state, return_time, return_info, create_time, update_time
+  </sql>
+</mapper>

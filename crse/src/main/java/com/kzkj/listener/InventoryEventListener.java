@@ -62,7 +62,7 @@ public class InventoryEventListener extends BaseListener{
             inventoryReturn.setOrderNo(inventory.getInventoryHead().getOrderNo());
             inventoryReturn.setEbpCode(inventory.getInventoryHead().getEbpCode());
             inventoryReturn.setEbpCode(inventory.getInventoryHead().getEbcCode());
-
+            inventoryReturn.setStatisticsFlag(inventory.getInventoryHead().getStatisticsFlag());
             orderNoList.add(inventory.getInventoryHead().getOrderNo());
             logisticsNoList.add(inventory.getInventoryHead().getLogisticsNo());
             String now = sdf.format(new Date());
@@ -90,15 +90,15 @@ public class InventoryEventListener extends BaseListener{
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB604Message");
         //插入数据库
-        inventoryService.insertInventorys(event.getInventory());
+        //inventoryService.insertInventorys(event.getInventory());
         //回执订单120
-        returnOrder120(orderNoList,baseTransfer.getDxpId());
+        //returnOrder120(orderNoList,baseTransfer.getDxpId());
         //回执运单120
-        returnLogistics120(logisticsNoList,baseTransfer.getDxpId());
+        //returnLogistics120(logisticsNoList,baseTransfer.getDxpId());
         //回执清单120
-        returnInvt120(event);
+        //returnInvt120(event);
         //回执清单399
-        returnInvt399(event);
+        //returnInvt399(event);
     }
 
     /**

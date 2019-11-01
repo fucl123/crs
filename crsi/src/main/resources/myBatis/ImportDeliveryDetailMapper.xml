@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.ImportDeliveryDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.ImportDeliveryDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="delivery_id" property="deliveryId" jdbcType="INTEGER" />
+    <result column="gnum" property="gnum" jdbcType="INTEGER" />
+    <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, delivery_id, gnum, logistics_no, note
+  </sql>
+</mapper>

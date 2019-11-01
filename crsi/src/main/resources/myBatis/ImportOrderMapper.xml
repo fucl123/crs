@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.ImportOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.ImportOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="guid" property="guid" jdbcType="VARCHAR" />
+    <result column="app_type" property="appType" jdbcType="CHAR" />
+    <result column="app_time" property="appTime" jdbcType="VARCHAR" />
+    <result column="app_status" property="appStatus" jdbcType="CHAR" />
+    <result column="order_type" property="orderType" jdbcType="CHAR" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="ebp_code" property="ebpCode" jdbcType="VARCHAR" />
+    <result column="ebp_name" property="ebpName" jdbcType="VARCHAR" />
+    <result column="ebc_code" property="ebcCode" jdbcType="VARCHAR" />
+    <result column="ebc_name" property="ebcName" jdbcType="VARCHAR" />
+    <result column="goods_value" property="goodsValue" jdbcType="DECIMAL" />
+    <result column="freight" property="freight" jdbcType="DECIMAL" />
+    <result column="discount" property="discount" jdbcType="DECIMAL" />
+    <result column="tax_total" property="taxTotal" jdbcType="DECIMAL" />
+    <result column="actural_paid" property="acturalPaid" jdbcType="DECIMAL" />
+    <result column="currency" property="currency" jdbcType="CHAR" />
+    <result column="buyer_reg_no" property="buyerRegNo" jdbcType="VARCHAR" />
+    <result column="buyer_name" property="buyerName" jdbcType="VARCHAR" />
+    <result column="buyer_telephone" property="buyerTelephone" jdbcType="VARCHAR" />
+    <result column="buyer_id_type" property="buyerIdType" jdbcType="CHAR" />
+    <result column="buyer_id_number" property="buyerIdNumber" jdbcType="VARCHAR" />
+    <result column="pay_code" property="payCode" jdbcType="VARCHAR" />
+    <result column="pay_name" property="payName" jdbcType="VARCHAR" />
+    <result column="pay_transaction_id" property="payTransactionId" jdbcType="VARCHAR" />
+    <result column="batch_numbers" property="batchNumbers" jdbcType="VARCHAR" />
+    <result column="consignee" property="consignee" jdbcType="VARCHAR" />
+    <result column="consignee_telephone" property="consigneeTelephone" jdbcType="VARCHAR" />
+    <result column="consignee_address" property="consigneeAddress" jdbcType="VARCHAR" />
+    <result column="consignee_district" property="consigneeDistrict" jdbcType="CHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="return_state" property="returnState" jdbcType="VARCHAR" />
+    <result column="return_time" property="returnTime" jdbcType="CHAR" />
+    <result column="return_info" property="returnInfo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, guid, app_type, app_time, app_status, order_type, order_no, ebp_code, ebp_name, 
+    ebc_code, ebc_name, goods_value, freight, discount, tax_total, actural_paid, currency, 
+    buyer_reg_no, buyer_name, buyer_telephone, buyer_id_type, buyer_id_number, pay_code, 
+    pay_name, pay_transaction_id, batch_numbers, consignee, consignee_telephone, consignee_address, 
+    consignee_district, note, return_state, return_time, return_info, create_time, update_time
+  </sql>
+</mapper>

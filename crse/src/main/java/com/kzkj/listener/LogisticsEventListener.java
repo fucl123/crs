@@ -30,9 +30,9 @@ public class LogisticsEventListener extends BaseListener{
         for(Logistics logistics:event.getLogistics())
         {
             LogisticsReturn logisticsReturn =new LogisticsReturn();
-            logisticsReturn.setGuid(logisticsReturn.getGuid());
-            logisticsReturn.setLogisticsCode(logisticsReturn.getLogisticsCode());
-            logisticsReturn.setLogisticsNo(logisticsReturn.getLogisticsNo());
+            logisticsReturn.setGuid(logistics.getGuid());
+            logisticsReturn.setLogisticsCode(logistics.getLogisticsCode());
+            logisticsReturn.setLogisticsNo(logistics.getLogisticsNo());
             String now = sdf.format(new Date());
             logisticsReturn.setReturnTime(now);
 

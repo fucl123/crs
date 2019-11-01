@@ -26,6 +26,22 @@ import javax.xml.bind.annotation.XmlType;
 	      "freight",
 	      "currency",
 	      "note",
+		"discount",
+		"taxTotal",
+		"acturalPaid",
+		"buyerRegNo",
+		"buyerName",
+		"buyerTelephone",
+		"buyerIdType",
+		"buyerIdNumber",
+		"payCode",
+		"payName",
+		"payTransactionId",
+		"batchNumbers",
+		"consignee",
+		"consigneeTelephone",
+		"consigneeAddress",
+		"consigneeDistrict",
 })  
 @Data
 public class OrderHead {
@@ -56,6 +72,39 @@ public class OrderHead {
     private String currency;
     
     private String note;
-    
+
+    //进口字段
+    private String discount;
+
+    private String taxTotal;
+
+	private String acturalPaid;
+
+	private String buyerRegNo;
+
+	private String buyerName;
+
+	private String buyerTelephone;
+
+	private String buyerIdType;
+
+	private String buyerIdNumber;
+
+	private String payCode;
+
+	private String payName;
+
+	private String payTransactionId;
+
+	private String batchNumbers;
+
+	private String consignee;
+
+	private String consigneeTelephone;
+
+	private String consigneeAddress;
+
+	private String consigneeDistrict;
+
 }
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kzkj.mapper.ImportInventoryMapper" >
+  <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.ImportInventory" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="guid" property="guid" jdbcType="VARCHAR" />
+    <result column="app_type" property="appType" jdbcType="CHAR" />
+    <result column="app_time" property="appTime" jdbcType="CHAR" />
+    <result column="app_status" property="appStatus" jdbcType="CHAR" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="ebp_code" property="ebpCode" jdbcType="VARCHAR" />
+    <result column="ebp_name" property="ebpName" jdbcType="VARCHAR" />
+    <result column="ebc_code" property="ebcCode" jdbcType="VARCHAR" />
+    <result column="ebc_name" property="ebcName" jdbcType="VARCHAR" />
+    <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR" />
+    <result column="logistics_code" property="logisticsCode" jdbcType="VARCHAR" />
+    <result column="logistics_name" property="logisticsName" jdbcType="VARCHAR" />
+    <result column="cop_no" property="copNo" jdbcType="VARCHAR" />
+    <result column="pre_no" property="preNo" jdbcType="CHAR" />
+    <result column="assure_code" property="assureCode" jdbcType="VARCHAR" />
+    <result column="ems_no" property="emsNo" jdbcType="VARCHAR" />
+    <result column="invt_no" property="invtNo" jdbcType="CHAR" />
+    <result column="ie_flag" property="ieFlag" jdbcType="CHAR" />
+    <result column="decl_time" property="declTime" jdbcType="CHAR" />
+    <result column="port_code" property="portCode" jdbcType="CHAR" />
+    <result column="ie_date" property="ieDate" jdbcType="CHAR" />
+    <result column="buyer_id_type" property="buyerIdType" jdbcType="CHAR" />
+    <result column="buyer_id_number" property="buyerIdNumber" jdbcType="VARCHAR" />
+    <result column="buyer_name" property="buyerName" jdbcType="VARCHAR" />
+    <result column="buyer_telephone" property="buyerTelephone" jdbcType="VARCHAR" />
+    <result column="consignee_address" property="consigneeAddress" jdbcType="VARCHAR" />
+    <result column="agent_code" property="agentCode" jdbcType="VARCHAR" />
+    <result column="agent_name" property="agentName" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+    <result column="trade_mode" property="tradeMode" jdbcType="CHAR" />
+    <result column="traf_mode" property="trafMode" jdbcType="CHAR" />
+    <result column="traf_no" property="trafNo" jdbcType="VARCHAR" />
+    <result column="voyage_no" property="voyageNo" jdbcType="VARCHAR" />
+    <result column="bill_no" property="billNo" jdbcType="VARCHAR" />
+    <result column="loct_no" property="loctNo" jdbcType="VARCHAR" />
+    <result column="license_no" property="licenseNo" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="CHAR" />
+    <result column="pod" property="pod" jdbcType="VARCHAR" />
+    <result column="freight" property="freight" jdbcType="DECIMAL" />
+    <result column="insured_fee" property="insuredFee" jdbcType="DECIMAL" />
+    <result column="currency" property="currency" jdbcType="CHAR" />
+    <result column="wrap_type" property="wrapType" jdbcType="CHAR" />
+    <result column="pack_no" property="packNo" jdbcType="INTEGER" />
+    <result column="gross_weight" property="grossWeight" jdbcType="DECIMAL" />
+    <result column="net_weight" property="netWeight" jdbcType="DECIMAL" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="return_state" property="returnState" jdbcType="VARCHAR" />
+    <result column="return_time" property="returnTime" jdbcType="CHAR" />
+    <result column="return_info" property="returnInfo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, guid, app_type, app_time, app_status, order_no, ebp_code, ebp_name, ebc_code, 
+    ebc_name, logistics_no, logistics_code, logistics_name, cop_no, pre_no, assure_code, 
+    ems_no, invt_no, ie_flag, decl_time, port_code, ie_date, buyer_id_type, buyer_id_number, 
+    buyer_name, buyer_telephone, consignee_address, agent_code, agent_name, area_code, 
+    area_name, trade_mode, traf_mode, traf_no, voyage_no, bill_no, loct_no, license_no, 
+    country, pod, freight, insured_fee, currency, wrap_type, pack_no, gross_weight, net_weight, 
+    note, return_state, return_time, return_info, create_time, update_time
+  </sql>
+</mapper>

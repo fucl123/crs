@@ -6,14 +6,21 @@ import com.kzkj.pojo.vo.request.delivery.CEB711Message;
 import com.kzkj.pojo.vo.request.delivery.Delivery;
 import com.kzkj.pojo.vo.response.delivery.CEB712Message;
 import com.kzkj.pojo.vo.response.delivery.DeliveryReturn;
+import com.kzkj.service.ImportDeliveryService;
 import com.kzkj.utils.XMLUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Component
 public class DeliveryEventListener extends BaseListener{
+
+    @Autowired
+    ImportDeliveryService importDeliveryService;
+
     @Subscribe
     public void listener(CEB711Message event){
         CEB712Message ceb712Message=new CEB712Message();
@@ -26,8 +33,8 @@ public class DeliveryEventListener extends BaseListener{
             deliveryReturn.setGuid(delivery.getDeliveryHead().getGuid());
             deliveryReturn.setCopNo(delivery.getDeliveryHead().getCopNo());
             deliveryReturn.setCustomsCode(delivery.getDeliveryHead().getCustomsCode());
-            deliveryReturn.setPreNo(delivery.getDeliveryHead().getPreNo());
-            deliveryReturn.setRkdNo(delivery.getDeliveryHead().getRkdNo());
+            deliveryReturn.setPreNo("123456789");
+            deliveryReturn.setRkdNo("123");
             deliveryReturn.setOperatorCode(delivery.getDeliveryHead().getOperatorCode());
             String now = sdf.format(new Date());
             deliveryReturn.setReturnTime(now);
@@ -55,5 +62,7 @@ public class DeliveryEventListener extends BaseListener{
         String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB712Message");
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB712Message");
+        //插入数据库
+        //importDeliveryService.insertImportDelivery(event.getDelivery());
     }
 }

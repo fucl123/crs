@@ -38,7 +38,7 @@ public class WaybillEventListener extends BaseListener{
             wayBillReturn.setPreNo("123456789");
             wayBillReturn.setBillNo(wayBill.getWayBillHead().getBillNo());
             wayBillReturn.setLogisticsCode(wayBill.getWayBillHead().getLogisticsCode());
-
+            wayBillReturn.setMsgSeqNo(wayBill.getWayBillHead().getMsgSeqNo());
             String now = sdf.format(new Date());
             wayBillReturn.setReturnTime(now);
 
@@ -65,9 +65,9 @@ public class WaybillEventListener extends BaseListener{
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB608Message");
         //插入数据库
-        waybillService.imsertWaybill(event.getWayBill());
+        //waybillService.imsertWaybill(event.getWayBill());
         //清单总分单399回执报文
-        returnWaybill399(event);
+        //returnWaybill399(event);
     }
 
     /**
