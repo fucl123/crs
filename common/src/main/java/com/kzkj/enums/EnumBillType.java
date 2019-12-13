@@ -90,7 +90,17 @@ public enum EnumBillType
 	/**
 	 * 收款单
 	 */
-	Receipts("CEB403Message"),;
+	Receipts("CEB403Message"),
+
+	/**
+	 * 进口撤消单
+	 */
+	ImportInvtCancel("CEB623Message"),
+
+	/**
+	 * 支付单
+	 */
+	PayMent("CEB411Message");
 	
 	private String name;
 

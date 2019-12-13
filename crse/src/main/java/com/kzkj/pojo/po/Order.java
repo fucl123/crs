@@ -44,6 +44,12 @@ public class Order extends Model<Order> {
 
     private String note;
 
+    private String returnStatus;
+
+    private String returnInfo;
+
+    private String returnTime;
+
     @TableField(exist= false)
     private List<OrderDetail> orderDetailList;
 

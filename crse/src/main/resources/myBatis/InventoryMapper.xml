@@ -51,7 +51,11 @@
     <result column="gross_weight" property="grossWeight" jdbcType="DECIMAL" />
     <result column="net_weight" property="netWeight" jdbcType="DECIMAL" />
     <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="return_status" property="returnStatus" jdbcType="VARCHAR" />
+    <result column="return_info" property="returnInfo" jdbcType="VARCHAR" />
+    <result column="return_time" property="returnTime" jdbcType="VARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
     id, guid, app_type, app_time, app_status, customs_code, ebp_code, ebp_name, order_no, 
     logistics_code, logistics_name, logistics_no, cop_no, pre_no, invt_no, ie_flag, port_code, 
@@ -59,7 +63,33 @@
     owner_name, iac_code, iac_name, ems_no, trade_mode, traf_mode, traf_name, voyage_no, 
     bill_no, total_package_no, loct_no, license_no, country, pod, freight, f_currency, 
     f_flag, insured_fee, i_currency, i_flag, wrap_type, pack_no, gross_weight, net_weight, 
-    note
+    note, return_status, return_info, return_time
   </sql>
+
+  <select id="getByOrderNoAndEbcCode" resultMap="BaseResultMap">
+    SELECT *
+    FROM tb_inventory WHERE ebc_code = #{ebcCode} and order_no = #{orderNo}
+  </select>
+
+  <select id="getByLogisticsCodeAndNo" resultMap="BaseResultMap">
+    SELECT *
+    FROM tb_inventory WHERE logistics_no = #{logisticsNo} and logistics_code = #{logisticsCode}
+  </select>
+
+  <update id="updateReturnStatus" parameterType="com.kzkj.pojo.po.Inventory">
+    update tb_inventory
+    <set >
+      <if test="returnStatus != null" >
+        return_status = #{returnStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTime != null" >
+        return_time = #{returnTime,jdbcType=VARCHAR},
+      </if>
+      <if test="returnInfo != null" >
+        return_info = #{returnInfo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
 
 </mapper>

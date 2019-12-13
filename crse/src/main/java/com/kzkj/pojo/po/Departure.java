@@ -1,11 +1,14 @@
 package com.kzkj.pojo.po;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
+
 @Getter
 @Setter
 @TableName("tb_departure")
@@ -45,6 +48,15 @@ public class Departure extends Model<Departure> {
     private Integer msgSeqNo;
 
     private String note;
+
+    private String returnStatus;
+
+    private String returnInfo;
+
+    private String returnTime;
+
+    @TableField(exist= false)
+    private List<DepatureDetail> depatureDetailList;
 
     @Override
     protected Serializable pkVal() {

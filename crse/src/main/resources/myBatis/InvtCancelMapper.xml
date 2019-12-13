@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kzkj.mapper.InvtCancelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.InvtCancel">
+        <id column="id" property="id" />
+        <result column="guid" property="guid" />
+        <result column="app_type" property="appType" />
+        <result column="app_time" property="appTime" />
+        <result column="app_status" property="appStatus" />
+        <result column="customs_code" property="customsCode" />
+        <result column="cop_no" property="copNo" />
+        <result column="pre_no" property="preNo" />
+        <result column="invt_no" property="invtNo" />
+        <result column="reason" property="reason" />
+        <result column="agent_code" property="agentCode" />
+        <result column="agent_name" property="agentName" />
+        <result column="ebc_code" property="ebcCode" />
+        <result column="ebc_name" property="ebcName" />
+        <result column="note" property="note" />
+        <result column="return_info" property="returnInfo" />
+        <result column="return_status" property="returnStatus" />
+        <result column="return_time" property="returnTime" />
+    </resultMap>
+
+    <select id="getByAgentCodeAndCopNo" resultMap="BaseResultMap">
+        SELECT *
+        FROM tb_invt_cancel WHERE agent_code = #{agentCode} and cop_no = #{copNo}
+    </select>
+
+</mapper>

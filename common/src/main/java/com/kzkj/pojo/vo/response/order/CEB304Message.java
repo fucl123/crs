@@ -12,7 +12,7 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)  
 //XML文件中的根标识  
-@XmlRootElement(name="CEB304Message",namespace="http://www.chinaport.gov.cn/ceb")  
+@XmlRootElement(name="CEB304Message")
 //控制JAXB 绑定类中属性和字段的排序  
 @XmlType(propOrder = {   
      "OrderReturn",   

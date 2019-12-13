@@ -5,10 +5,11 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="company_code" property="companyCode" jdbcType="VARCHAR" />
     <result column="company_name" property="companyName" jdbcType="VARCHAR" />
-    <result column="dxp_id" property="dxpId" jdbcType="VARCHAR" />
+    <result column="dxp_id_e" property="dxpIdE" jdbcType="VARCHAR" />
+    <result column="dxp_id_i" property="dxpIdI" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, company_code, company_name, dxp_id
+    id, company_code, company_name, dxp_id_e, dxp_id_i
   </sql>
 
 </mapper>

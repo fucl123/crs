@@ -24,11 +24,19 @@
     <result column="msg_count" property="msgCount" jdbcType="INTEGER" />
     <result column="msg_seq_no" property="msgSeqNo" jdbcType="INTEGER" />
     <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="return_status" property="returnStatus" jdbcType="VARCHAR" />
+    <result column="return_info" property="returnInfo" jdbcType="VARCHAR" />
+    <result column="return_time" property="returnTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, guid, app_type, app_time, app_status, customs_code, cop_no, pre_no, agent_code, 
     agent_name, loct_no, traf_mode, traf_name, voyage_no, bill_no, domestic_traf_no, 
-    gross_weight, logistics_code, logistics_name, msg_count, msg_seq_no, note
+    gross_weight, logistics_code, logistics_name, msg_count, msg_seq_no, note, return_status,
+    return_info, return_time
   </sql>
 
+  <select id="getByAgentCodeAndCopNo" resultMap="BaseResultMap">
+    SELECT *
+    FROM tb_waybill WHERE agent_code = #{agentCode} and cop_no = #{copNo}
+  </select>
 </mapper>

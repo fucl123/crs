@@ -13,6 +13,7 @@ import java.io.Serializable;
 @XmlRootElement(name="DeliveryList")  
 //控制JAXB 绑定类中属性和字段的排序  
 @XmlType(propOrder = {   
+		"gnum",
 		"logisticsNo",
 		"note",
 })
@@ -20,7 +21,8 @@ import java.io.Serializable;
 public class DeliveryList implements Serializable {
 
 	private static final long serialVersionUID = 3318789164426748254L;
-	
+
+	private Integer gnum;
 	private String logisticsNo;
 	private String note;
 }

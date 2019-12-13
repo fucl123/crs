@@ -32,7 +32,7 @@ public class ImportLogistics extends Model<ImportLogistics> {
 
     private BigDecimal freight;
 
-    private BigDecimal insuredFree;
+    private BigDecimal insuredFee;
 
     private String currency;
 
@@ -50,7 +50,7 @@ public class ImportLogistics extends Model<ImportLogistics> {
 
     private String note;
 
-    private String returnState;
+    private String returnStatus;
 
     private String returnTime;
 

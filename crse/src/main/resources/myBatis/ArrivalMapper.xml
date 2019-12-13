@@ -21,11 +21,19 @@
     <result column="logistics_name" property="logisticsName" jdbcType="VARCHAR" />
     <result column="msg_count" property="msgCount" jdbcType="INTEGER" />
     <result column="msg_seq_no" property="msgSeqNo" jdbcType="INTEGER" />
+    <result column="return_status" property="returnStatus" jdbcType="VARCHAR" />
+    <result column="return_info" property="returnInfo" jdbcType="VARCHAR" />
+    <result column="return_time" property="returnTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, guid, app_type, app_time, app_status, customs_code, cop_no, pre_no, operator_code, 
     operator_name, loct_no, ie_flag, traf_mode, bill_no, domestic_traf_no, logistics_code, 
-    logistics_name, msg_count, msg_seq_no
+    logistics_name, msg_count, msg_seq_no, return_status, return_info, return_time
   </sql>
+
+  <select id="getByOperatorCodeAndCopNo" resultMap="BaseResultMap">
+    SELECT *
+    FROM tb_arrival WHERE operator_code = #{operatorCode} and cop_no = #{copNo}
+  </select>
 
 </mapper>

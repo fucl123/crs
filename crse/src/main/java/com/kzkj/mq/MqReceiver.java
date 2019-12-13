@@ -28,6 +28,7 @@ import com.kzkj.pojo.vo.request.tax.CEB816Message;
 import com.kzkj.pojo.vo.request.taxStatus.CEB818Message;
 import com.kzkj.pojo.vo.request.waybill.CEB607Message;
 import com.kzkj.service.CompanyService;
+import com.kzkj.utils.Basse64Util;
 import com.kzkj.utils.XMLUtil;
 import com.kzkj.utils.XmlValidate;
 import com.rabbitmq.client.Channel;
@@ -82,9 +83,18 @@ public class MqReceiver implements ChannelAwareMessageListener
 
             String receiveXml = customsXml;
             log.info("解密终端报文{}",receiveXml);
+            //String data = receiveXml.substring(receiveXml.indexOf("<dxp:Data>")+"<dxp:Data>".length(),receiveXml.indexOf("</dxp:Data>"));
+            //log.info("data:{}",data);
+            //log.info("解密业务报文{}",Basse64Util.decodeBase64(data));
+            //String test = Basse64Util.decodeBase64(receiveXml);
+
+            //log.info("解密报文{}",test);
+
+
             String removePart=receiveXml.substring(receiveXml.indexOf(begin),receiveXml.indexOf(end)+end.length());
             xml=receiveXml.replace(removePart, "");
-//            String errorMsg = this.validateXml(xml);
+
+//          String errorMsg = this.validateXml(xml);
             String errorMsg="";
             if(StringUtils.isNotEmpty(errorMsg)) {
                 sendCEB900Message(errorMsg, xml, customsXml, receiveXml);
@@ -235,7 +245,7 @@ public class MqReceiver implements ChannelAwareMessageListener
                 dxpId = xml.substring(xml.indexOf("<ceb:dxpId>"), xml.indexOf("</ceb:dxpId>")).substring("<ceb:dxpId>".length());
                 for (Company company : companyList)
                 {
-                    if (company.getDxpId().equals(dxpId))
+                    if (company.getDxpIdE().equals(dxpId))
                     {
                         flag=true;
                         break;
@@ -249,7 +259,7 @@ public class MqReceiver implements ChannelAwareMessageListener
                 //sendCEB900Message(errorMsg, xml, customsXml, receiveXml);
                 return;
             }
-            flag=false;
+            flag=true;
             //判断接收方id是否对应
             for(String receiverId:customs.getTransInfo().getReceiverIds().getReceiverId())
             {

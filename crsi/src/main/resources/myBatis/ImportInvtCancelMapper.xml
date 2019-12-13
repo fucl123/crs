@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kzkj.mapper.ImportInvtCancelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kzkj.pojo.po.ImportInvtCancel">
+        <id column="id" property="id" />
+        <result column="guid" property="guid" />
+        <result column="app_type" property="appType" />
+        <result column="app_time" property="appTime" />
+        <result column="app_status" property="appStatus" />
+        <result column="customs_code" property="customsCode" />
+        <result column="order_no" property="orderNo" />
+        <result column="ebp_code" property="ebpCode" />
+        <result column="ebp_name" property="ebpName" />
+        <result column="logistics_no" property="logisticsNo" />
+        <result column="logistics_code" property="logisticsCode" />
+        <result column="logistics_name" property="logisticsName" />
+        <result column="buyer_id_type" property="buyerIdType" />
+        <result column="buyer_id_number" property="buyerIdNumber" />
+        <result column="buyer_telephone" property="buyerTelephone" />
+        <result column="buyer_name" property="buyerName" />
+        <result column="cop_no" property="copNo" />
+        <result column="pre_no" property="preNo" />
+        <result column="invt_no" property="invtNo" />
+        <result column="reason" property="reason" />
+        <result column="agent_code" property="agentCode" />
+        <result column="agent_name" property="agentName" />
+        <result column="ebc_code" property="ebcCode" />
+        <result column="ebc_name" property="ebcName" />
+        <result column="note" property="note" />
+        <result column="return_info" property="returnInfo" />
+        <result column="return_status" property="returnStatus" />
+        <result column="return_time" property="returnTime" />
+    </resultMap>
+
+    <select id="getByAgentCodeAndCopNo" resultMap="BaseResultMap">
+        SELECT *
+        FROM tb_import_invt_cancel WHERE agent_code = #{agentCode} and cop_no = #{copNo}
+    </select>
+
+</mapper>

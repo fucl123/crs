@@ -1,12 +1,15 @@
 package com.kzkj.pojo.po;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
+
 @Getter
 @Setter
 @TableName("tb_inventory")
@@ -108,6 +111,15 @@ public class Inventory extends Model<Inventory> {
     private BigDecimal netWeight;
 
     private String note;
+
+    private String returnStatus;
+
+    private String returnInfo;
+
+    private String returnTime;
+
+    @TableField(exist= false)
+    private List<InventoryDetail> inventoryDetailList;
 
     @Override
     protected Serializable pkVal() {

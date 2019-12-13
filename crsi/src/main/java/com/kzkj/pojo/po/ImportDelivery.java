@@ -1,12 +1,15 @@
 package com.kzkj.pojo.po;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 @Getter
 @Setter
 @TableName("tb_import_delivery")
@@ -51,7 +54,7 @@ public class ImportDelivery extends Model<ImportDelivery> {
 
     private String note;
 
-    private String returnState;
+    private String returnStatus;
 
     private String returnTime;
 
@@ -60,6 +63,9 @@ public class ImportDelivery extends Model<ImportDelivery> {
     private Date createTime;
 
     private Date updateTime;
+
+    @TableField(exist= false)
+    private List<ImportDeliveryDetail> importDeliveryDetailList;
 
     @Override
     protected Serializable pkVal() {

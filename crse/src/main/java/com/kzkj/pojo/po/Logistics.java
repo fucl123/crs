@@ -47,6 +47,12 @@ public class Logistics extends Model<Logistics> {
 
     private String note;
 
+    private String returnStatus;
+
+    private String returnInfo;
+
+    private String returnTime;
+
     @Override
     protected Serializable pkVal() {
         return this.id;

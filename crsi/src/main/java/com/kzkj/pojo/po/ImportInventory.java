@@ -1,6 +1,7 @@
 package com.kzkj.pojo.po;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,8 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 @Getter
 @Setter
 @TableName("tb_import_inventory")
@@ -108,7 +111,7 @@ public class ImportInventory extends Model<ImportInventory> {
 
     private String note;
 
-    private String returnState;
+    private String returnStatus;
 
     private String returnTime;
 
@@ -117,6 +120,9 @@ public class ImportInventory extends Model<ImportInventory> {
     private Date createTime;
 
     private Date updateTime;
+
+    @TableField(exist= false)
+    private List<ImportInventoryDetail> importInventoryDetailList;
 
     @Override
     protected Serializable pkVal() {

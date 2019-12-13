@@ -24,7 +24,7 @@ public class TestControl {
         company.setId(id);
         company.setCompanyCode("companyCode");
         company.setCompanyName("companyName");
-        company.setDxpId("dxpid");
+        company.setDxpIdE("dxpid");
         companyService.insert(company);
         return "hello";
     }

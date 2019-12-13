@@ -6,6 +6,7 @@ import com.google.common.eventbus.AsyncEventBus;
 import com.kzkj.enums.EnumBillType;
 import com.kzkj.listener.BaseListener;
 import com.kzkj.pojo.vo.request.InvtCancel.CEB605Message;
+import com.kzkj.pojo.vo.request.InvtCancel.CEB623Message;
 import com.kzkj.pojo.vo.request.arrival.CEB507Message;
 import com.kzkj.pojo.vo.request.customs.Custom;
 import com.kzkj.pojo.vo.request.delivery.CEB711Message;
@@ -87,7 +88,7 @@ public class MqReceiver implements ChannelAwareMessageListener
             String removePart=receiveXml.substring(receiveXml.indexOf(begin),receiveXml.indexOf(end)+end.length());
             xml=receiveXml.replace(removePart, "");
 //            String errorMsg = this.validateXml(xml);
-            String errorMsg = crsiXmlValidate.xmlStringValidate(xml);
+            String errorMsg = "";//crsiXmlValidate.xmlStringValidate(xml);
             log.info("报文校验:",errorMsg);
             if(StringUtils.isNotEmpty(errorMsg)) {
                 sendCEB900Message(errorMsg, xml, customsXml, receiveXml);
@@ -350,6 +351,11 @@ public class MqReceiver implements ChannelAwareMessageListener
         {
             log.info("处理{CEB818Message}报文");
             result =  XMLUtil.convertXmlStrToObject(CEB818Message.class, xml);
+        }
+        else if(xml.indexOf(EnumBillType.ImportInvtCancel.getName()) > 0)
+        {
+            log.info("处理{CEB623Message}报文");
+            result =  XMLUtil.convertXmlStrToObject(CEB623Message.class, xml);
         }
         else
         {

@@ -22,8 +22,11 @@ public class Company extends Model<Company> {
     @TableField("company_name")
     private String companyName;
 
-    @TableField("dxp_id")
-    private String dxpId;
+    @TableField("dxp_id_e")
+    private String dxpIdE;
+
+    @TableField("dxp_id_i")
+    private String dxpIdI;
 
     @Override
     protected Serializable pkVal() {

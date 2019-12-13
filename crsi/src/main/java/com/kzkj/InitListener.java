@@ -63,14 +63,13 @@ public class InitListener implements ApplicationRunner {
         Channel channelE = connectionFactory.createConnection().createChannel(false);
         for(Company company:list)
         {
-            if(!StringUtils.isEmpty(company.getDxpId()))
+            if(!StringUtils.isEmpty(company.getDxpIdI()))
             {
-                //stringBuiilder.append(company.getDxpId()).append(";");
-                //stringBuiilder.append(company.getDxpId()).append("_HZ;");
-                channelE.queueDeclare(company.getDxpId(), true, false, false, null);
-                channelE.queueDeclare(company.getDxpId()+"_HZ", true, false, false, null);
-                simpleMessageListenerContainer.addQueueNames(company.getDxpId());
-                log.info("dxpid:{}",company.getDxpId());
+                channelE.queueDeclare(company.getDxpIdI(), true, false, false, null);
+                channelE.queueDeclare(company.getDxpIdI()+"_HZ", true, false, false, null);
+                //simpleMessageListenerContainer.addQueueNames(company.getDxpIdI());
+                simpleMessageListenerContainer.addQueueNames(company.getDxpIdE());
+                log.info("dxpid:{}",company.getDxpIdI());
             }
         }
 

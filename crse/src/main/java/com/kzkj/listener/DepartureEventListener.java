@@ -2,6 +2,7 @@ package com.kzkj.listener;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.common.eventbus.Subscribe;
+import com.kzkj.pojo.po.DepatureDetail;
 import com.kzkj.pojo.po.Inventory;
 import com.kzkj.pojo.vo.request.base.BaseTransfer;
 import com.kzkj.pojo.vo.request.departure.CEB509Message;
@@ -41,46 +42,73 @@ public class DepartureEventListener extends BaseListener{
         int msgCount = departureHead.getMsgCount();
         int msgSeqNo = Integer.parseInt(departureHead.getMsgSeqNo());
 
+        List<com.kzkj.pojo.po.Departure> departureList= new ArrayList<com.kzkj.pojo.po.Departure>();
+        List<com.kzkj.pojo.po.Departure> updateDepartureList= new ArrayList<com.kzkj.pojo.po.Departure>();
         for(Departure departure:event.getDeparture())
         {
+            com.kzkj.pojo.po.Departure dep = new com.kzkj.pojo.po.Departure();
             DepartureReturn departureReturn =new DepartureReturn();
-            departureReturn.setGuid(departure.getDepartureHead().getGuid());
-            departureReturn.setCopNo(departure.getDepartureHead().getCopNo());
+            BeanMapper.map(departure.getDepartureHead(),departureReturn);
+            BeanMapper.map(departure.getDepartureHead(),dep);
+            dep.setDepatureDetailList(BeanMapper.mapList(departure.getDepartureList(), DepatureDetail.class));
             departureReturn.setPreNo("123456789");
-            departureReturn.setLogisticsCode(departure.getDepartureHead().getLogisticsCode());
-            departureReturn.setMsgSeqNo(departure.getDepartureHead().getMsgSeqNo());
+            dep.setPreNo(departureReturn.getPreNo());
             String now = sdf.format(new Date());
             departureReturn.setReturnTime(now);
+            dep.setReturnTime(now);
             //数据查重
-            boolean flag=true;
-            if(flag)
+            com.kzkj.pojo.po.Departure oldDeparture =
+                    departureService.getByLogisticsCodeAndCopNo(
+                            departure.getDepartureHead().getLogisticsCode(),departure.getDepartureHead().getCopNo());
+            if(oldDeparture == null)
             {
+                departureReturn = departureService.checkDeparture(departureReturn,dep);
                 departureReturn.setReturnInfo("新增申报成功["+departure.getDepartureHead().getGuid()+"]");
                 departureReturn.setReturnStatus("2");
+                dep.setReturnInfo(departureReturn.getReturnInfo());
+                dep.setReturnStatus(departureReturn.getReturnStatus());
+                departureList.add(dep);
             }else {
-                departureReturn.setReturnInfo("处理失败，业务主键重复入库失败，报文业务主键["
-                        + departure.getDepartureHead().getCopNo()
-                        + "]，原离境单报送时间对应状态为["
-                        + now + " : 2-申报;]");
-                departureReturn.setReturnStatus("-304001");
+
+                if (!oldDeparture.getReturnStatus().equals("2")
+                        &&!oldDeparture.getReturnStatus().equals("399"))
+                {
+                    departureReturn = departureService.checkDeparture(departureReturn,dep);
+                    if (departureReturn.getReturnStatus().equals("2"))
+                    {
+                        dep.setId(oldDeparture.getId());
+                        dep.setReturnInfo(departureReturn.getReturnInfo());
+                        dep.setReturnStatus(departureReturn.getReturnStatus());
+                        updateDepartureList.add(dep);
+                    }
+                }else{
+                    departureReturn.setReturnInfo("处理失败，业务主键重复入库失败，报文业务主键["
+                            + departure.getDepartureHead().getCopNo()
+                            + "]，原离境单报送时间对应状态为["
+                            + now + " : 2-申报;]");
+                    departureReturn.setReturnStatus("-304001");
+                }
             }
             departureReturnList.add(departureReturn);
         }
         ceb510Message.setDepartureReturn(departureReturnList);
         ceb510Message.setGuid(departureReturnList.get(0).getGuid());
         String xml= XMLUtil.convertToXml(ceb510Message);
-        String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB712Message");
+        String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB510Message");
         String queue=baseTransfer.getDxpId()+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB712Message");
+        logger.info("回执报文："+resultXml);
+        mqSender.sendMsg(queue, resultXml,"CEB510Message");
         //插入数据库
-        //departureService.insertDepartures(event.getDeparture());
+        departureService.insertDepartures(departureList);
+        //更新退单数据
+        departureService.batchUpdateDeparture(updateDepartureList);
         //判断是否是拆分的最后一个报文
         if(msgCount == msgSeqNo)
         {
             //离境单399回执报文
-            //returnDeparture399(departureHead.getBillNo(),baseTransfer.getDxpId());
+            returnDeparture399(departureHead.getBillNo(),baseTransfer.getDxpId());
             //清单899回执报文
-            //returnInvt899(departureHead.getBillNo(),baseTransfer.getDxpId());
+            returnInvt899(departureHead.getBillNo(),baseTransfer.getDxpId());
         }
     }
 
@@ -96,35 +124,23 @@ public class DepartureEventListener extends BaseListener{
         EntityWrapper<com.kzkj.pojo.po.Departure> entityWrapper = new EntityWrapper<>();
         entityWrapper.eq("bill_no",billNo);
         List<com.kzkj.pojo.po.Departure> departureList= departureService.selectList(entityWrapper);
+        String now = sdf.format(new Date());
         for(com.kzkj.pojo.po.Departure d:departureList)
         {
             DepartureReturn departureReturn =new DepartureReturn();
+            d.setReturnTime(now);
+            d.setReturnInfo("审核成功["+d.getLogisticsCode()+"+"+d.getCopNo()+"]");
+            d.setReturnStatus("399");
             BeanMapper.map(d,departureReturn);
-            departureReturn.setLogisticsCode(d.getLogisticsCode());
-            String now = sdf.format(new Date());
-            departureReturn.setReturnTime(now);
-
-            //数据查重
-            boolean flag=true;
-            if(flag)
-            {
-                departureReturn.setReturnInfo("审核成功["+d.getGuid()+"]");
-                departureReturn.setReturnStatus("399");
-            }else {
-                departureReturn.setReturnInfo("处理失败，业务主键重复入库失败，报文业务主键["
-                        + d.getCopNo()
-                        + "]，原离境单报送时间对应状态为["
-                        + now + " : 2-申报;]");
-                departureReturn.setReturnStatus("-304001");
-            }
             departureReturnList.add(departureReturn);
         }
         ceb510Message.setDepartureReturn(departureReturnList);
         ceb510Message.setGuid(departureReturnList.get(0).getGuid());
         String xml= XMLUtil.convertToXml(ceb510Message);
-        String resultXml=customData(xml, dxpId, "CEB712Message");
+        String resultXml=customData(xml, dxpId, "CEB510Message");
         String queue=dxpId+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB712Message");
+        if(departureService.updateBatchById(departureList))
+        mqSender.sendMsg(queue, resultXml,"CEB510Message");
     }
 
 
@@ -141,14 +157,14 @@ public class DepartureEventListener extends BaseListener{
         if (logisticsList == null || logisticsList.size() <= 0) return;
         CEB604Message ceb604Message=new CEB604Message();
         List<InventoryReturn> inventoryReturnList= new ArrayList<InventoryReturn>();
+        String now = sdf.format(new Date());
         for(Inventory inventory: logisticsList)
         {
             InventoryReturn inventoryReturn = new InventoryReturn();
+            inventory.setReturnTime(now);
+            inventory.setReturnInfo("结关["+inventory.getEbcCode()+"+"+inventory.getOrderNo()+"]");
+            inventory.setReturnStatus("899");
             BeanMapper.map(inventory,inventoryReturn);
-            String now = sdf.format(new Date());
-            inventoryReturn.setReturnTime(now);
-            inventoryReturn.setReturnInfo("结关["+inventory.getGuid()+"]");
-            inventoryReturn.setReturnStatus("899");
             inventoryReturnList.add(inventoryReturn);
         }
         ceb604Message.setInventoryReturn(inventoryReturnList);
@@ -156,6 +172,7 @@ public class DepartureEventListener extends BaseListener{
         String xml= XMLUtil.convertToXml(ceb604Message);
         String resultXml=customData(xml, dxpId, "CEB604Message");
         String queue = dxpId+"_HZ";
+        if(inventoryService.updateBatchById(logisticsList))
         mqSender.sendMsg(queue, resultXml,"CEB604Message");
     }
 }

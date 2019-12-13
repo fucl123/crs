@@ -13,9 +13,8 @@ import com.kzkj.utils.BeanMapper;
 import com.kzkj.utils.XMLUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import java.util.*;
 
 @Component
 public class DeliveryEventListener extends BaseListener{
@@ -31,7 +30,7 @@ public class DeliveryEventListener extends BaseListener{
 
         List<ImportDelivery> importDeliveryList =new ArrayList<>();
         List<ImportDelivery> updateImportDeliveryList= new ArrayList<>();
-
+        Map<String,ImportDelivery> map = new HashMap<String,ImportDelivery>();
         for(Delivery delivery:event.getDelivery())
         {
             ImportDelivery importDelivery = new ImportDelivery();
@@ -43,6 +42,15 @@ public class DeliveryEventListener extends BaseListener{
             BeanMapper.map(delivery.getDeliveryHead(),importDelivery);
             importDelivery.setReturnTime(now);
             importDelivery.setImportDeliveryDetailList(BeanMapper.mapList(delivery.getDeliveryList(), ImportDeliveryDetail.class));
+
+            if(map.containsKey(importDelivery.getOperatorCode()+"_"+importDelivery.getCopNo()))
+            {
+                deliveryReturn.setReturnInfo("重复申报，业务主键["+importDelivery.getOperatorCode()+"_"+importDelivery.getCopNo()+"]");
+                deliveryReturn.setReturnStatus("100");
+                deliveryReturnList.add(deliveryReturn);
+                continue;
+            }
+            map.put(importDelivery.getOperatorCode()+"_"+importDelivery.getCopNo(),importDelivery);
             //数据查重
             ImportDelivery oldImportDelivery = importDeliveryService.getByOperatorCodeAndCopNo(
                     delivery.getDeliveryHead().getOperatorCode(),delivery.getDeliveryHead().getCopNo());

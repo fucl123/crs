@@ -20,14 +20,39 @@
     <result column="ebc_name" property="ebcName" jdbcType="VARCHAR" />
     <result column="ebc_telephone" property="ebcTelephone" jdbcType="VARCHAR" />
     <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="return_status" property="returnStatus" jdbcType="VARCHAR" />
+    <result column="return_info" property="returnInfo" jdbcType="VARCHAR" />
+    <result column="return_time" property="returnTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, guid, app_type, app_time, app_status, logistics_code, logistics_name, logistics_no, 
     freight, insured_fee, currency, gross_weight, pack_no, goods_info, ebc_code, ebc_name,
-    ebc_telephone, note
+    ebc_telephone, note, return_status, return_info, return_time
   </sql>
 
   <select id="getByLogisticsNo" resultMap="BaseResultMap">
     SELECT * FROM tb_logistics WHERE logistics_no = #{logisticsNo}
   </select>
+
+  <select id="getByLogisticsCodeAndNo" resultMap="BaseResultMap">
+    SELECT *
+    FROM tb_logistics WHERE logistics_no = #{logisticsNo} and logistics_code = #{logisticsCode}
+  </select>
+
+  <update id="updateReturnStatus" parameterType="com.kzkj.pojo.po.Logistics">
+    update tb_logistics
+    <set >
+      <if test="returnStatus != null" >
+        return_status = #{returnStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="returnTime != null" >
+        return_time = #{returnTime,jdbcType=VARCHAR},
+      </if>
+      <if test="returnInfo != null" >
+        return_info = #{returnInfo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
 </mapper>

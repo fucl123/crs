@@ -48,6 +48,12 @@ public class Arrival extends Model<Arrival> {
 
     private Integer msgSeqNo;
 
+    private String returnStatus;
+
+    private String returnInfo;
+
+    private String returnTime;
+
     @Override
     protected Serializable pkVal() {
         return this.id;

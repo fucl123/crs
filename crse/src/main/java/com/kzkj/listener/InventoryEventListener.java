@@ -1,9 +1,9 @@
 package com.kzkj.listener;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.common.eventbus.Subscribe;
+import com.kzkj.pojo.po.InventoryDetail;
 import com.kzkj.pojo.po.Logistics;
-import com.kzkj.pojo.po.Order;
+import com.kzkj.pojo.po.Receipts;
 import com.kzkj.pojo.vo.request.base.BaseTransfer;
 import com.kzkj.pojo.vo.request.invt.CEB603Message;
 import com.kzkj.pojo.vo.request.invt.Inventory;
@@ -13,17 +13,17 @@ import com.kzkj.pojo.vo.response.logistics.CEB506Message;
 import com.kzkj.pojo.vo.response.logistics.LogisticsReturn;
 import com.kzkj.pojo.vo.response.order.CEB304Message;
 import com.kzkj.pojo.vo.response.order.OrderReturn;
+import com.kzkj.pojo.vo.response.receipts.CEB404Message;
+import com.kzkj.pojo.vo.response.receipts.ReceiptsReturn;
 import com.kzkj.service.InventoryService;
 import com.kzkj.service.LogisticsService;
 import com.kzkj.service.OrderService;
+import com.kzkj.service.ReceiptsService;
 import com.kzkj.utils.BeanMapper;
 import com.kzkj.utils.RandomUtil;
 import com.kzkj.utils.XMLUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import java.sql.Wrapper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,46 +40,72 @@ public class InventoryEventListener extends BaseListener{
     @Autowired
     LogisticsService logisticsService;
 
+    @Autowired
+    ReceiptsService receiptsService;
+
     @Subscribe
     public void listener(CEB603Message event){
         CEB604Message ceb604Message=new CEB604Message();
         List<InventoryReturn> inventoryReturnList =new ArrayList<>();
         BaseTransfer baseTransfer=event.getBaseTransfer();
 
-        List<String> orderNoList = new ArrayList<>();
-        List<String> logisticsNoList = new ArrayList<>();
+        //List<String> orderNoList = new ArrayList<>();
+        //List<String> logisticsNoList = new ArrayList<>();
+        List<com.kzkj.pojo.po.Inventory> inventoryList = new ArrayList<>();
+        List<com.kzkj.pojo.po.Inventory> updateInventoryList = new ArrayList<>();
         for(Inventory inventory:event.getInventory())
         {
             InventoryReturn inventoryReturn =new InventoryReturn();
-            inventoryReturn.setGuid(inventory.getInventoryHead().getGuid());
-            inventoryReturn.setCopNo(inventory.getInventoryHead().getCopNo());
-            inventoryReturn.setAgentCode(inventory.getInventoryHead().getAgentCode());
+            BeanMapper.map(inventory.getInventoryHead(),inventoryReturn);
             inventoryReturn.setPreNo("123456789");
             inventory.getInventoryHead().setPreNo("123456789");
-            inventoryReturn.setEbcCode(inventory.getInventoryHead().getEbcCode());
             inventoryReturn.setInvtNo(sdf.format(new Date())+ RandomUtil.genRomdom());
             inventory.getInventoryHead().setInvtNo(inventoryReturn.getInvtNo());
-            inventoryReturn.setOrderNo(inventory.getInventoryHead().getOrderNo());
-            inventoryReturn.setEbpCode(inventory.getInventoryHead().getEbpCode());
-            inventoryReturn.setEbpCode(inventory.getInventoryHead().getEbcCode());
-            inventoryReturn.setStatisticsFlag(inventory.getInventoryHead().getStatisticsFlag());
-            orderNoList.add(inventory.getInventoryHead().getOrderNo());
-            logisticsNoList.add(inventory.getInventoryHead().getLogisticsNo());
+            //orderNoList.add(inventory.getInventoryHead().getOrderNo());
+            //logisticsNoList.add(inventory.getInventoryHead().getLogisticsNo());
             String now = sdf.format(new Date());
             inventoryReturn.setReturnTime(now);
 
+            com.kzkj.pojo.po.Inventory inven = new com.kzkj.pojo.po.Inventory();
+            inven.setReturnTime(now);
+            BeanMapper.map(inventory.getInventoryHead(),inven);
+            inven.setInventoryDetailList(BeanMapper.mapList(inventory.getInventoryList(), InventoryDetail.class));
+
             //数据查重
-            boolean flag=true;
-            if(flag)
+            com.kzkj.pojo.po.Inventory oldInventory
+                    = inventoryService.getByOrderNoAndEbcCode(
+                            inventory.getInventoryHead().getOrderNo(),inventory.getInventoryHead().getEbcCode());
+            if(oldInventory == null)
             {
-                inventoryReturn.setReturnInfo("新增申报成功["+inventory.getInventoryHead().getGuid()+"]");
-                inventoryReturn.setReturnStatus("2");
+                //数据校验
+                inventoryReturn = inventoryService.checkInventory(inventoryReturn,inven);
+                inven.setReturnStatus(inventoryReturn.getReturnStatus());
+                inven.setReturnInfo(inventoryReturn.getReturnInfo());
+                inventoryList.add(inven);
             }else {
-                inventoryReturn.setReturnInfo("处理失败，业务主键重复入库失败，报文业务主键["
-                        + inventory.getInventoryHead().getCopNo()
-                        + "]，原清单报送时间对应状态为["
-                        + now + " : 2-申报;]");
-                inventoryReturn.setReturnStatus("-304001");
+                if(!oldInventory.getReturnStatus().equals("2")
+                        &&!oldInventory.getReturnStatus().equals("120")
+                        &&!oldInventory.getReturnStatus().equals("399")
+                        &&!oldInventory.getReturnStatus().equals("899"))
+                {
+                    //数据校验
+                    inventoryReturn = inventoryService.checkInventory(inventoryReturn,inven);
+                    if (inventoryReturn.getReturnStatus().equals("2"))
+                    {
+                        inven.setId(oldInventory.getId());
+                        inven.setReturnStatus(inventoryReturn.getReturnStatus());
+                        inven.setReturnInfo(inventoryReturn.getReturnInfo());
+                        updateInventoryList.add(inven);
+                    }
+                }else{
+                    inventoryReturn.setReturnInfo("处理失败，业务主键重复入库失败，报文业务主键["
+                            + inventory.getInventoryHead().getCopNo()
+                            + "]，原清单报送时间对应状态为["
+                            + now + " : 2-申报;]");
+                    inventoryReturn.setReturnStatus("-304001");
+                    inven.setReturnStatus(inventoryReturn.getReturnStatus());
+                    inven.setReturnInfo(inventoryReturn.getReturnInfo());
+                }
             }
             inventoryReturnList.add(inventoryReturn);
         }
@@ -90,234 +116,165 @@ public class InventoryEventListener extends BaseListener{
         String queue=baseTransfer.getDxpId()+"_HZ";
         mqSender.sendMsg(queue, resultXml,"CEB604Message");
         //插入数据库
-        //inventoryService.insertInventorys(event.getInventory());
-        //回执订单120
-        //returnOrder120(orderNoList,baseTransfer.getDxpId());
-        //回执运单120
-        //returnLogistics120(logisticsNoList,baseTransfer.getDxpId());
-        //回执清单120
-        //returnInvt120(event);
-        //回执清单399
-        //returnInvt399(event);
+        inventoryService.insertInventorys(inventoryList);
+        //更新退单记录
+        inventoryService.batchUpdateInventory(updateInventoryList);
+        //清单发起3单对碰
+        inventoryList.addAll(updateInventoryList);
+        SDDP(inventoryList,baseTransfer.getDxpId());
+        //收款单120回执
+        send120Receipts(inventoryList,baseTransfer.getDxpId());
     }
 
+
     /**
-     * 订单逻辑校验通过报文回执
-     * @param orderNoList
-     * @param dxpId
+     * 清单发起三单对碰
+     * @param inventoryList
+     * @param dxpid
      */
-    public void returnOrder120(List<String> orderNoList,String dxpId)
+    private void SDDP(List<com.kzkj.pojo.po.Inventory> inventoryList,String dxpid)
     {
-        if (orderNoList == null || orderNoList.size() <= 0 || StringUtils.isEmpty(dxpId)) return;
-        EntityWrapper<Order> ew = new EntityWrapper<>();
-        ew.in("order_no",orderNoList);
-        List<Order> orderList = orderService.selectList(ew);
-        if (orderList == null) return;
-        List<OrderReturn> orderReturnList= new ArrayList<OrderReturn>();
-        for(Order order: orderList)
+        if (inventoryList == null || inventoryList.size() <= 0) return;
+        //订单120回执
+        List<OrderReturn> order120ReturnList= new ArrayList<OrderReturn>();
+        //运单120回执
+        List<LogisticsReturn> logistics120ReturnList= new ArrayList<LogisticsReturn>();
+        //清单120回执
+        List<InventoryReturn> inventory120ReturnList= new ArrayList<InventoryReturn>();
+        //清单399回执
+        List<InventoryReturn> inventory399ReturnList= new ArrayList<InventoryReturn>();
+
+        //订单120
+        List<com.kzkj.pojo.po.Order> orderUpdateList= new ArrayList<com.kzkj.pojo.po.Order>();
+        //运单120
+        List<Logistics> logisticsUpdateList= new ArrayList<Logistics>();
+        //清单399
+        List<com.kzkj.pojo.po.Inventory> inventoryUpdateList= new ArrayList<com.kzkj.pojo.po.Inventory>();
+
+        String now = sdf.format(new Date());
+        for(com.kzkj.pojo.po.Inventory inventory: inventoryList)
         {
+            com.kzkj.pojo.po.Order order = orderService.getByOrderNoAndEbcCode(inventory.getOrderNo(),inventory.getEbcCode());
+            if(order == null || !order.getReturnStatus().equals("2")) continue;
+            Logistics logistics = logisticsService.getByLogisticsCodeAndNo(inventory.getLogisticsCode(),inventory.getLogisticsNo());
+            if(logistics == null || !logistics.getReturnStatus().equals("2")) continue;
+            //订单120回执
             OrderReturn orderReturn = new OrderReturn();
             BeanMapper.map(order,orderReturn);
-            orderReturn.setReturnInfo("逻辑校验通过["+orderReturn.getGuid()+"]");
+            orderReturn.setReturnTime(now);
             orderReturn.setReturnStatus("120");
-            orderReturn.setReturnTime(sdf.format(new Date()));
-            orderReturnList.add(orderReturn);
-        }
-        CEB304Message ceb304Message=new CEB304Message();
-        ceb304Message.setGuid(orderReturnList.get(0).getGuid());
-        ceb304Message.setOrderReturn(orderReturnList);
-        String xml= XMLUtil.convertToXml(ceb304Message);
-        String resultXml=customData(xml, dxpId, "CEB304Message");
-        String queue= dxpId+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB304Message");
-    }
-
-    /**
-     * 订单审核通过报文回执
-     * @param orderNoList
-     * @param dxpId
-     */
-    public void returnOrder399(List<String> orderNoList,String dxpId)
-    {
-        if (orderNoList == null || orderNoList.size() <= 0 || StringUtils.isEmpty(dxpId)) return;
-        EntityWrapper<Order> ew = new EntityWrapper<>();
-        ew.in("order_no",orderNoList);
-        List<Order> orderList = orderService.selectList(ew);
-        if (orderList == null) return;
-        List<OrderReturn> orderReturnList= new ArrayList<OrderReturn>();
-        for(Order order: orderList)
-        {
-            OrderReturn orderReturn = new OrderReturn();
-            BeanMapper.map(order,orderReturn);
-            orderReturn.setReturnInfo("审核通过["+orderReturn.getGuid()+"]");
-            orderReturn.setReturnStatus("399");
-            orderReturn.setReturnTime(sdf.format(new Date()));
-            orderReturnList.add(orderReturn);
-        }
-        CEB304Message ceb304Message=new CEB304Message();
-        ceb304Message.setGuid(orderReturnList.get(0).getGuid());
-        ceb304Message.setOrderReturn(orderReturnList);
-        String xml= XMLUtil.convertToXml(ceb304Message);
-        String resultXml=customData(xml, dxpId, "CEB304Message");
-        String queue= dxpId+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB304Message");
-    }
-
-    /**
-     * 运单逻辑校验通过回执报文
-     * @param logisticsNoList
-     * @param dxpId
-     */
-    public void returnLogistics120(List<String> logisticsNoList,String dxpId)
-    {
-        if (logisticsNoList == null || logisticsNoList.size() <= 0 || StringUtils.isEmpty(dxpId)) return;
-        EntityWrapper<Logistics> ew = new EntityWrapper<>();
-        ew.in("logistics_no",logisticsNoList);
-        List<Logistics> logisticsList = logisticsService.selectList(ew);
-        if (logisticsNoList == null) return;
-        List<LogisticsReturn> logisticsReturnList= new ArrayList<>();
-        for(Logistics logistics: logisticsList)
-        {
+            orderReturn.setReturnInfo("逻辑校验通过["+order.getOrderNo()+"+"+order.getEbcCode()+"]");
+            order.setReturnInfo(orderReturn.getReturnInfo());
+            order.setReturnStatus(orderReturn.getReturnStatus());
+            order.setReturnTime(orderReturn.getReturnTime());
+            order120ReturnList.add(orderReturn);
+            orderUpdateList.add(order);
+            //运单120回执
             LogisticsReturn logisticsReturn = new LogisticsReturn();
             BeanMapper.map(logistics,logisticsReturn);
-            logisticsReturn.setReturnInfo("逻辑校验通过["+logisticsReturn.getGuid()+"]");
+            logisticsReturn.setReturnTime(now);
             logisticsReturn.setReturnStatus("120");
-            logisticsReturn.setReturnTime(sdf.format(new Date()));
-            logisticsReturnList.add(logisticsReturn);
-        }
-        CEB506Message ceb506Message=new CEB506Message();
-        ceb506Message.setGuid(logisticsReturnList.get(0).getGuid());
-        ceb506Message.setLogisticsReturn(logisticsReturnList);
-        String xml= XMLUtil.convertToXml(ceb506Message);
-        String resultXml=customData(xml, dxpId, "CEB506Message");
-        String queue= dxpId+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB506Message");
-    }
-    /**
-     * 运单审核通过回执报文
-     * @param logisticsNoList
-     * @param dxpId
-     */
-    public void returnLogistics399(List<String> logisticsNoList,String dxpId)
-    {
-        if (logisticsNoList == null || logisticsNoList.size() <= 0 || StringUtils.isEmpty(dxpId)) return;
-        EntityWrapper<Logistics> ew = new EntityWrapper<>();
-        ew.in("logistics_no",logisticsNoList);
-        List<Logistics> logisticsList = logisticsService.selectList(ew);
-        if (logisticsNoList == null) return;
-        List<LogisticsReturn> logisticsReturnList= new ArrayList<>();
-        for(Logistics logistics: logisticsList)
-        {
-            LogisticsReturn logisticsReturn = new LogisticsReturn();
-            BeanMapper.map(logistics,logisticsReturn);
-            logisticsReturn.setReturnInfo("审核通过["+logisticsReturn.getGuid()+"]");
-            logisticsReturn.setReturnStatus("399");
-            logisticsReturn.setReturnTime(sdf.format(new Date()));
-            logisticsReturnList.add(logisticsReturn);
-        }
-        CEB506Message ceb506Message=new CEB506Message();
-        ceb506Message.setGuid(logisticsReturnList.get(0).getGuid());
-        ceb506Message.setLogisticsReturn(logisticsReturnList);
-        String xml= XMLUtil.convertToXml(ceb506Message);
-        String resultXml=customData(xml, dxpId, "CEB506Message");
-        String queue= dxpId+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB506Message");
-    }
-
-    /**
-     * 清单逻辑校验通过回执报文
-     * @param event
-     */
-    public void returnInvt120(CEB603Message event)
-    {
-        CEB604Message ceb604Message=new CEB604Message();
-        List<InventoryReturn> inventoryReturnList =new ArrayList<>();
-        BaseTransfer baseTransfer=event.getBaseTransfer();
-
-        for(Inventory inventory:event.getInventory())
-        {
-            InventoryReturn inventoryReturn =new InventoryReturn();
-            BeanMapper.map(inventory.getInventoryHead(),inventoryReturn);
-            String now = sdf.format(new Date());
+            logisticsReturn.setReturnInfo("逻辑校验通过["+logistics.getLogisticsCode()+"+"+logistics.getLogisticsNo()+"]");
+            logistics.setReturnInfo(logisticsReturn.getReturnInfo());
+            logistics.setReturnStatus(logisticsReturn.getReturnStatus());
+            logistics.setReturnTime(logisticsReturn.getReturnTime());
+            logistics120ReturnList.add(logisticsReturn);
+            logisticsUpdateList.add(logistics);
+            //清单120回执
+            InventoryReturn inventoryReturn = new InventoryReturn();
+            BeanMapper.map(inventory,inventoryReturn);
             inventoryReturn.setReturnTime(now);
-            //逻辑校验
-            inventory.getInventoryList();
-
-            boolean flag=true;
-            List<Logistics> logisticsList
-                    = logisticsService.getByLogisticsNo(inventory.getInventoryHead().getLogisticsNo());
-            if (logisticsList == null || logisticsList.size() <= 0) flag = false;
-            if(!inventory.getInventoryHead().getLogisticsCode().equals(logisticsList.get(0).getLogisticsCode()))
-            {
-                inventoryReturn.setReturnInfo("处理失败，清单["+inventory.getInventoryHead().getInvtNo()+"]与运单的物流企业编码不一致;");
-                inventoryReturn.setReturnStatus("100");
-            }else if (!inventory.getInventoryHead().getLogisticsNo().equals(logisticsList.get(0).getLogisticsNo())){
-                inventoryReturn.setReturnInfo("处理失败，清单["+inventory.getInventoryHead().getInvtNo()+"]与运单的物流运单号不一致;");
-                inventoryReturn.setReturnStatus("100");
-            }else if (!inventory.getInventoryHead().getGrossWeight().equals(logisticsList.get(0).getGrossWeight().toString())){
-                inventoryReturn.setReturnInfo("处理失败，清单["+inventory.getInventoryHead().getInvtNo()+"]与运单的重量不一致;");
-                inventoryReturn.setReturnStatus("100");
-            }else{
-                inventoryReturn.setReturnInfo("逻辑校验通过["+inventory.getInventoryHead().getGuid()+"]");
-                inventoryReturn.setReturnStatus("120");
-            }
-            /*if(flag)
-            {
-                inventoryReturn.setReturnInfo("逻辑校验通过["+inventory.getInventoryHead().getGuid()+"]");
-                inventoryReturn.setReturnStatus("120");
-            }else {
-                inventoryReturn.setReturnInfo("处理失败，业务主键重复入库失败，报文业务主键["
-                        + inventory.getInventoryHead().getCopNo()
-                        + "]，原清单报送时间对应状态为["
-                        + now + " : 2-申报;]");
-                inventoryReturn.setReturnStatus("-304001");
-            }*/
-            inventoryReturnList.add(inventoryReturn);
+            inventoryReturn.setReturnStatus("120");
+            inventoryReturn.setReturnInfo("逻辑校验通过["+inventory.getEbcCode()+"+"+inventory.getOrderNo()+"]");
+            inventory120ReturnList.add(inventoryReturn);
+            //清单399回执
+            inventoryReturn.setReturnStatus("399");
+            inventoryReturn.setReturnInfo("海关审结["+inventory.getEbcCode()+"+"+inventory.getOrderNo()+"]");
+            inventory.setReturnInfo(inventoryReturn.getReturnInfo());
+            inventory.setReturnStatus(inventoryReturn.getReturnStatus());
+            inventory.setReturnTime(inventoryReturn.getReturnTime());
+            inventory399ReturnList.add(inventoryReturn);
+            inventoryUpdateList.add(inventory);
         }
-        ceb604Message.setInventoryReturn(inventoryReturnList);
-        ceb604Message.setGuid(inventoryReturnList.get(0).getGuid());
-        String xml= XMLUtil.convertToXml(ceb604Message);
-        String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB604Message");
-        String queue=baseTransfer.getDxpId()+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB604Message");
+        //更新数据库
+        if (inventoryService.inventory120Update(orderUpdateList,logisticsUpdateList,inventoryUpdateList))
+        {
+            //发送订单120回执报文
+            CEB304Message ceb304Message=new CEB304Message();
+            ceb304Message.setOrderReturn(order120ReturnList);
+            ceb304Message.setGuid(order120ReturnList.get(0).getGuid());
+            String xml= XMLUtil.convertToXml(ceb304Message);
+            String resultXml=customData(xml, dxpid, "CEB304Message");
+            String queue = dxpid + "_HZ";
+            mqSender.sendMsg(queue, resultXml,"CEB304Message");
+
+            //发送运单120回执报文
+            CEB506Message ceb506Message=new CEB506Message();
+            ceb506Message.setLogisticsReturn(logistics120ReturnList);
+            ceb506Message.setGuid(logistics120ReturnList.get(0).getGuid());
+            xml= XMLUtil.convertToXml(ceb506Message);
+            resultXml=customData(xml, dxpid, "CEB506Message");
+            mqSender.sendMsg(queue, resultXml,"CEB506Message");
+
+            //发送清单120回执报文
+            CEB604Message ceb604Message=new CEB604Message();
+            ceb604Message.setInventoryReturn(inventory120ReturnList);
+            ceb604Message.setGuid(inventory120ReturnList.get(0).getGuid());
+            xml = XMLUtil.convertToXml(ceb604Message);
+            resultXml = customData(xml, dxpid, "CEB604Message");
+            mqSender.sendMsg(queue, resultXml,"CEB604Message");
+
+            //发送清单399回执报文
+            ceb604Message.setInventoryReturn(inventory399ReturnList);
+            ceb604Message.setGuid(inventory399ReturnList.get(0).getGuid());
+            xml = XMLUtil.convertToXml(ceb604Message);
+            resultXml = customData(xml, dxpid, "CEB604Message");
+            mqSender.sendMsg(queue, resultXml,"CEB604Message");
+        }
     }
 
     /**
-     * 清单审核通过回执报文
-     * @param event
+     * 订运清三单对碰成功后发送收款单120回执
+     * @param inventoryList
+     * @param dxpid
      */
-    public void returnInvt399(CEB603Message event)
+    private void send120Receipts(List<com.kzkj.pojo.po.Inventory> inventoryList,String dxpid)
     {
-        CEB604Message ceb604Message=new CEB604Message();
-        List<InventoryReturn> inventoryReturnList =new ArrayList<>();
-        BaseTransfer baseTransfer=event.getBaseTransfer();
-
-        for(Inventory inventory:event.getInventory())
+        if (inventoryList == null || inventoryList.size() <= 0) return;
+        ///收款单120回执
+        List<ReceiptsReturn> receipts120ReturnList= new ArrayList<ReceiptsReturn>();
+        //收款单120更新
+        List<com.kzkj.pojo.po.Receipts> receiptsUpdateList= new ArrayList<com.kzkj.pojo.po.Receipts>();
+        String now = sdf.format(new Date());
+        for(com.kzkj.pojo.po.Inventory inventory: inventoryList)
         {
-            InventoryReturn inventoryReturn =new InventoryReturn();
-            BeanMapper.map(inventory.getInventoryHead(),inventoryReturn);
-            String now = sdf.format(new Date());
-            inventoryReturn.setReturnTime(now);
-            //审核校验
-            boolean flag=true;
-            if(flag)
-            {
-                inventoryReturn.setReturnInfo("审核通过["+inventory.getInventoryHead().getGuid()+"]");
-                inventoryReturn.setReturnStatus("399");
-            }else {
-                inventoryReturn.setReturnInfo("处理失败，业务主键重复入库失败，报文业务主键["
-                        + inventory.getInventoryHead().getCopNo()
-                        + "]，原清单报送时间对应状态为["
-                        + now + " : 2-申报;]");
-                inventoryReturn.setReturnStatus("-304001");
-            }
-            inventoryReturnList.add(inventoryReturn);
+            com.kzkj.pojo.po.Inventory invent = inventoryService.selectById(inventory.getId());
+            if(invent == null || !invent.getReturnStatus().equals("399")) continue;
+            Receipts receipts = receiptsService.getByEbcCodeAndOrderNo(inventory.getEbcCode(),inventory.getOrderNo());
+            if(receipts == null || !receipts.getReturnStatus().equals("2")) continue;
+            //收款单120回执
+            ReceiptsReturn receiptsReturn =new ReceiptsReturn();
+            BeanMapper.map(receipts,receiptsReturn);
+            receiptsReturn.setReturnInfo("逻辑校验通过["+receipts.getOrderNo()+"+"+receipts.getEbcCode()+"]");
+            receiptsReturn.setReturnStatus("120");
+            receiptsReturn.setReturnTime(now);
+            receipts.setReturnInfo(receiptsReturn.getReturnInfo());
+            receipts.setReturnStatus(receiptsReturn.getReturnStatus());
+            receipts.setReturnTime(receiptsReturn.getReturnTime());
+            receipts120ReturnList.add(receiptsReturn);
+            receiptsUpdateList.add(receipts);
         }
-        ceb604Message.setInventoryReturn(inventoryReturnList);
-        ceb604Message.setGuid(inventoryReturnList.get(0).getGuid());
-        String xml= XMLUtil.convertToXml(ceb604Message);
-        String resultXml=customData(xml, baseTransfer.getDxpId(), "CEB604Message");
-        String queue=baseTransfer.getDxpId()+"_HZ";
-        mqSender.sendMsg(queue, resultXml,"CEB604Message");
+        //更新数据库
+        if (receiptsUpdateList.size() > 0 && receiptsService.updateBatchById(receiptsUpdateList))
+        {
+            String queue = dxpid + "_HZ";
+            //发送收款单120回执报文
+            CEB404Message ceb404Message=new CEB404Message();
+            ceb404Message.setReceiptsReturn(receipts120ReturnList);
+            ceb404Message.setGuid(receipts120ReturnList.get(0).getGuid());
+            String xml = XMLUtil.convertToXml(ceb404Message);
+            String resultXml = customData(xml, dxpid, "CEB404Message");
+            mqSender.sendMsg(queue, resultXml,"CEB404Message");
+        }
     }
 }

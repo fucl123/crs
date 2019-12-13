@@ -3,6 +3,7 @@ package com.kzkj.service.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.kzkj.mapper.ArrivalMapper;
 import com.kzkj.pojo.po.Arrival;
+import com.kzkj.pojo.vo.response.arrival.ArrivalReturn;
 import com.kzkj.service.ArrivalService;
 import com.kzkj.utils.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,17 @@ public class ArrivalServiceImpl extends ServiceImpl<ArrivalMapper, Arrival> impl
             arrivalMapper.insert(BeanMapper.map(arrival.getArrivalHead(),Arrival.class));
         }
         return true;
+    }
+
+    @Override
+    public Arrival getByOperatorCodeAndCopNo(String operatorCode, String copNo) {
+        return arrivalMapper.getByOperatorCodeAndCopNo(operatorCode,copNo);
+    }
+
+    @Override
+    public ArrivalReturn checkArrival(ArrivalReturn arrivalReturn, Arrival arrival) {
+        arrivalReturn.setReturnInfo("新增申报成功["+arrival.getOperatorCode()+"+"+arrival.getCopNo()+"]");
+        arrivalReturn.setReturnStatus("2");
+        return arrivalReturn;
     }
 }
