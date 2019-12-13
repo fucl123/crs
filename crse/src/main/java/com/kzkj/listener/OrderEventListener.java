@@ -200,12 +200,15 @@ public class OrderEventListener extends BaseListener{
             inventoryReturn.setReturnInfo("逻辑校验通过["+inventory.getEbcCode()+"+"+inventory.getOrderNo()+"]");
             inventory120ReturnList.add(inventoryReturn);
             //清单399回执
-            inventoryReturn.setReturnStatus("399");
-            inventoryReturn.setReturnInfo("海关审结["+inventory.getEbcCode()+"+"+inventory.getOrderNo()+"]");
-            inventory.setReturnInfo(inventoryReturn.getReturnInfo());
-            inventory.setReturnStatus(inventoryReturn.getReturnStatus());
-            inventory.setReturnTime(inventoryReturn.getReturnTime());
-            inventory399ReturnList.add(inventoryReturn);
+            InventoryReturn inventoryReturn1= new InventoryReturn();
+            BeanMapper.map(inventory,inventoryReturn1);
+            inventoryReturn1.setReturnTime(now);
+            inventoryReturn1.setReturnStatus("399");
+            inventoryReturn1.setReturnInfo("海关审结["+inventory.getEbcCode()+"+"+inventory.getOrderNo()+"]");
+            inventory.setReturnInfo(inventoryReturn1.getReturnInfo());
+            inventory.setReturnStatus(inventoryReturn1.getReturnStatus());
+            inventory.setReturnTime(inventoryReturn1.getReturnTime());
+            inventory399ReturnList.add(inventoryReturn1);
             inventoryUpdateList.add(inventory);
         }
         //更新数据库

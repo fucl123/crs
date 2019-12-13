@@ -67,8 +67,8 @@ public class InitListener implements ApplicationRunner {
             {
                 channelE.queueDeclare(company.getDxpIdI(), true, false, false, null);
                 channelE.queueDeclare(company.getDxpIdI()+"_HZ", true, false, false, null);
-                //simpleMessageListenerContainer.addQueueNames(company.getDxpIdI());
-                simpleMessageListenerContainer.addQueueNames(company.getDxpIdE());
+                simpleMessageListenerContainer.addQueueNames(company.getDxpIdI());
+                //simpleMessageListenerContainer.addQueueNames(company.getDxpIdE());
                 log.info("dxpid:{}",company.getDxpIdI());
             }
         }
